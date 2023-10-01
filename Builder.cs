@@ -10,6 +10,8 @@ namespace DawnLangCompiler
         private static List<string> Lines = new List<string>();
         private static List<string> Tokens = new List<string>();
         private static List<string> ConvertedTokens = new List<string>();
+        private static List<string> IntVars = new List<string>();
+        private static List<string> StringVars = new List<string>();
         private static string ErrorOpCode = "a000";
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -107,13 +109,35 @@ namespace DawnLangCompiler
                     case "print":
                         ConvertedTokens.Add("printf(" + Tokens[i + 1] + ");");
                         break;
+                    case "print_str":
+                        ConvertedTokens.Add("printf(\"%s\\n\"," + Tokens[i + 1] + ");");
+                        break;
                     case "int":
                         ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + ";");
+                        IntVars.Add(Tokens[i + 1]);
                         break;
-                    case "printvar":
+                    case "string":
+                        ConvertedTokens.Add("char " + Tokens[i + 1] + "[]" + Tokens[i + 2] + Tokens[i + 3] + ";");
+                        StringVars.Add(Tokens[i + 1]);
+                        break;
+                    case "print_int":
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");
                         break;
+                    case "for":
+                        ConvertedTokens.Add("for(int i = " + Tokens[i + 3] + "; i < " + Tokens[i + 5] + "; i++){");
+                        break;
+                    case "then":
+                        if (Tokens[i + 1] == "end")
+                            ConvertedTokens.Add("};");
+                        break;
                     default:
+                        if (IntVars.Contains(Tokens[i]))
+                        {
+                            if (Tokens[i + 1] == "=")
+                            {
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                            }
+                        }
                         break;
                 }
             }
