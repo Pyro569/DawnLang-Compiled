@@ -1,0 +1,45 @@
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.csproj.AssemblyReference.cache
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.GeneratedMSBuildEditorConfig.editorconfig
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfoInputs.cache
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfo.cs
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.csproj.CoreCompileInputs.cache
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/bin/Debug/net7.0/Chip-8 Emu
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/bin/Debug/net7.0/Chip-8 Emu.deps.json
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/bin/Debug/net7.0/Chip-8 Emu.runtimeconfig.json
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/bin/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/bin/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/refint/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/Chip-8 Emu.genruntimeconfig.cache
+/home/nathan/Documents/Programming/Projects/Chip-8 Emu/obj/Debug/net7.0/ref/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/bin/Debug/net7.0/Chip-8 Emu
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/bin/Debug/net7.0/Chip-8 Emu.deps.json
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/bin/Debug/net7.0/Chip-8 Emu.runtimeconfig.json
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/bin/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/bin/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.csproj.AssemblyReference.cache
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.GeneratedMSBuildEditorConfig.editorconfig
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfoInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfo.cs
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.csproj.CoreCompileInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/refint/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/Chip-8 Emu.genruntimeconfig.cache
+/home/nathan/Documents/Programming/Projects/DawnLang Compiler/obj/Debug/net7.0/ref/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/Chip-8 Emu
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/Chip-8 Emu.deps.json
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/Chip-8 Emu.runtimeconfig.json
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.csproj.AssemblyReference.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.GeneratedMSBuildEditorConfig.editorconfig
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfoInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.AssemblyInfo.cs
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.csproj.CoreCompileInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/refint/Chip-8 Emu.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/Chip-8 Emu.genruntimeconfig.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/ref/Chip-8 Emu.dll
