@@ -119,8 +119,8 @@ namespace DawnLangCompiler
             }
 
             //debug purposes only
-            foreach (string tokens in ConvertedTokens)
-                System.Console.WriteLine(tokens);
+            //foreach (string tokens in ConvertedTokens)
+            //    System.Console.WriteLine(tokens);
         }
 
         private static void CreateCFile()
