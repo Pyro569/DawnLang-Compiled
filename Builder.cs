@@ -105,8 +105,13 @@ namespace DawnLangCompiler
                 switch (Tokens[i])
                 {
                     case "print":
-                        ConvertedTokens.Add("printf(");
-                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 1] + ");"; //add next token to the end of the print command
+                        ConvertedTokens.Add("printf(" + Tokens[i + 1] + ");");
+                        break;
+                    case "int":
+                        ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + ";");
+                        break;
+                    case "printvar":
+                        ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");
                         break;
                     default:
                         break;
@@ -114,8 +119,8 @@ namespace DawnLangCompiler
             }
 
             //debug purposes only
-            //foreach (string tokens in ConvertedTokens)
-            //    System.Console.WriteLine(tokens);
+            foreach (string tokens in ConvertedTokens)
+                System.Console.WriteLine(tokens);
         }
 
         private static void CreateCFile()
