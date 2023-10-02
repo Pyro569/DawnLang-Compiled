@@ -13,6 +13,7 @@ namespace DawnLangCompiler
         private static List<string> IntVars = new List<string>();           //names of integer variables stored in the program
         private static List<string> StringVars = new List<string>();        //names of string variables stored in the program
         private static List<string> RequiredImports = new List<string>();   //imports required to make the C code work
+        private static List<string> FunctionNames = new List<string>();     //names of created functions
         private static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -155,14 +156,32 @@ namespace DawnLangCompiler
                         if (Tokens[i + 1] == "end")         //end a for loop with a };
                             ConvertedTokens.Add("};");
                         break;
+                    case "function":
+                        if (Tokens[i + 1] == "main")
+                        {
+                            ConvertedTokens.Add("int main(){");
+                        }
+                        else
+                        {
+                            ConvertedTokens.Add("void " + Tokens[i + 1] + "(){");
+                            FunctionNames.Add(Tokens[i + 1]);
+                        }
+                        break;
+                    case "}":
+                        ConvertedTokens.Add("}");
+                        break;
                     default:
                         //change the value of an int variable
-                        if (IntVars.Contains(Tokens[i]))
+                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
                         {
                             if (Tokens[i + 1] == "=")
                             {
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
                             }
+                        }
+                        if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
+                        {
+                            ConvertedTokens.Add(Tokens[i] + "();");
                         }
                         break;
                 }
@@ -184,15 +203,11 @@ namespace DawnLangCompiler
             {
                 outputFile.WriteLine("#include " + RequiredImports[i] + "\n");
             }
-
-            outputFile.WriteLine("int main() {");   //create a basic C file main function
             //write each converted token to the c file
             foreach (string codeLines in ConvertedTokens)
             {
                 outputFile.WriteLine(codeLines);
             }
-            //close off the c file with a return 0; and a right brace
-            outputFile.WriteLine("return 0;\n}");
             outputFile.Close();
         }
 

@@ -1,6 +1,12 @@
-int a = 12;
-print_int(a);
-string hello = "hello world";
-print_str(hello);
-a = 13;
-print_int(a);
+function print_goodbye_world(){
+    print("Goodbye, World!\n");
+}
+
+function print_hello_world(){
+    print("Hello, World!\n");
+    print_goodbye_world();
+}
+
+function main(){
+    print_hello_world();
+}
