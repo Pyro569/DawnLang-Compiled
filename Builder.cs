@@ -20,7 +20,8 @@ namespace DawnLangCompiler
         {
             try
             {
-                ReadFile(FilePath);     //get the tokens of the fike
+                ReadFile(FilePath);     //get the tokens of the file
+                SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
                 CheckForImports();      //check for required imports to make it work in C
                 ConvertTokens();        //convert the code to C
                 CreateCFile();          //write the C code into a file
@@ -41,7 +42,7 @@ namespace DawnLangCompiler
 
             //read the file's lines and add to the lines list
             StreamReader streamReader = new StreamReader(FilePath);
-            String line = streamReader.ReadLine();
+            string line = streamReader.ReadLine();
             while (line != null)
             {
                 Lines.Add(line);
@@ -57,9 +58,7 @@ namespace DawnLangCompiler
             {
                 //add semicolon to end to allow for easier breaking of lines in parsing
                 if (!Lines[i].EndsWith(";"))
-                {
                     Lines[i] += ";";
-                }
 
                 string TokenString = "";
                 bool Quotation = false;
@@ -69,28 +68,22 @@ namespace DawnLangCompiler
 
                     //if quotation marks, mark the beginning of quotation for tokens to be 1 token
                     if (Lines[i][j] == '"' && Quotation == false)   //begin quotation
-                    {
                         Quotation = true;
-                    }
                     else if (Lines[i][j] == '"' && Quotation == true)   //end quotation
-                    {
                         Quotation = false;
-                    }
 
                     //add space to string if in quote and space
                     if (Lines[i][j] == ' ' && Quotation == true)
-                    {
                         TokenString += " ";
-                    }
                     //if not semicolon space or parenthesis then add current char to string
-                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')')
-                    {
+                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',')
                         TokenString += Lines[i][j];
-                    }
                     else
                     //add the string to the tokens and set string to blank
                     {
                         Tokens.Add(TokenString);
+                        if (Lines[i][j] == ',')
+                            Tokens.Add(",");
                         TokenString = "";
                     }
                 }
@@ -98,7 +91,18 @@ namespace DawnLangCompiler
 
             //debug purposes only
             //foreach (string token in Tokens)
-            //    System.Console.WriteLine(token);
+            //   System.Console.WriteLine(token);
+        }
+
+        private static void SearchForFunctions()
+        {
+            ErrorOpCode = "fs100"; //fs for function search, 100 for operation spot
+                                   //loop through every function and check if it contains function declaration
+            for (int i = 0; i < Tokens.Count; i++)
+                if (Tokens[i] == "function")
+                    if (Tokens[i + 1] != "main")
+                        FunctionNames.Add(Tokens[i + 1]);
+            //if function is declared other than main, add to function name list
         }
 
         private static void CheckForImports()
@@ -116,6 +120,8 @@ namespace DawnLangCompiler
                 "<stdio.h>",    //print_int
                 "<stdio.h>",    //print_str
             };
+
+            ErrorOpCode = "is100";  //is for import search
 
             for (int i = 0; i < FunctionsRequiringImports.Count; i++)   //loop through each function in the FunctionsRequiringImports list
                 if (Tokens.Contains(FunctionsRequiringImports[i]) && !RequiredImports.Contains(CorrespondingImport[i]))
@@ -158,13 +164,34 @@ namespace DawnLangCompiler
                         break;
                     case "function":
                         if (Tokens[i + 1] == "main")
-                        {
                             ConvertedTokens.Add("int main(){");
-                        }
                         else
                         {
-                            ConvertedTokens.Add("void " + Tokens[i + 1] + "(){");
-                            FunctionNames.Add(Tokens[i + 1]);
+                            ConvertedTokens.Add("void " + Tokens[i + 1] + "(");
+                            for (int j = i; j < Tokens.Count; j++)
+                            {
+                                if (Tokens[j] == "int")
+                                {
+                                    ConvertedTokens.Add("int " + Tokens[j + 1]);
+                                    if (Tokens[j + 2] != "{")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                    IntVars.Add(Tokens[j + 1]);
+                                    Tokens.Remove(Tokens[j]);
+                                    Tokens.Remove(Tokens[j + 1]);
+                                }
+                                if (Tokens[j] == "string")
+                                {
+                                    ConvertedTokens.Add("string " + Tokens[j + 1]);
+                                    if (Tokens[j + 2] != "{")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                    StringVars.Add(Tokens[j + 1]);
+                                    Tokens.Remove(Tokens[j]);
+                                    Tokens.Remove(Tokens[j + 1]);
+                                }
+                                else if (Tokens[j] == "}")
+                                    break;
+                            }
+                            ConvertedTokens.Add("){");
                         }
                         break;
                     case "}":
@@ -173,15 +200,35 @@ namespace DawnLangCompiler
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
-                        {
                             if (Tokens[i + 1] == "=")
-                            {
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
-                            }
-                        }
                         if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
                         {
-                            ConvertedTokens.Add(Tokens[i] + "();");
+                            ConvertedTokens.Add(Tokens[i] + "(");
+                            for (int j = i; j < Tokens.Count; j++)
+                            {
+                                if (IntVars.Contains(Tokens[j + 1]))
+                                {
+                                    ConvertedTokens.Add(Tokens[j + 1]);
+                                    if (Tokens[j + 2] == ",")
+                                    {
+                                        ConvertedTokens.Add(",");
+                                        ConvertedTokens.Add(Tokens[j + 4]);
+                                    }
+                                }
+                                else if (StringVars.Contains(Tokens[j + 1]))
+                                {
+                                    ConvertedTokens.Add(Tokens[j + 1]);
+                                    if (Tokens[j + 2] == ",")
+                                    {
+                                        ConvertedTokens.Add(",");
+                                        ConvertedTokens.Add(Tokens[j + 4]);
+                                    }
+                                }
+                                if (!IntVars.Contains(Tokens[j + 1]) && !StringVars.Contains(Tokens[j + 1]))
+                                    break;
+                            }
+                            ConvertedTokens[ConvertedTokens.Count - 1] += ");";
                         }
                         break;
                 }
@@ -200,14 +247,10 @@ namespace DawnLangCompiler
 
             //add the required imports to the top of the c file
             for (int i = 0; i < RequiredImports.Count; i++)
-            {
                 outputFile.WriteLine("#include " + RequiredImports[i] + "\n");
-            }
             //write each converted token to the c file
             foreach (string codeLines in ConvertedTokens)
-            {
                 outputFile.WriteLine(codeLines);
-            }
             outputFile.Close();
         }
 
@@ -230,9 +273,7 @@ namespace DawnLangCompiler
             ErrorOpCode = "cl100";              //cl for cleanup, 100 for first potential error spot
 
             if (File.Exists("./TempFile.c"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
-            {
                 File.Delete("./TempFile.c");
-            }
         }
     }
 }
