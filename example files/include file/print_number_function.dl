@@ -1,0 +1,3 @@
+function print_number(int number){
+    print_int(number);
+}

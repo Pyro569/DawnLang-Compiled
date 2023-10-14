@@ -24,34 +24,43 @@ namespace DawnLangCompiler
                 SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
                 CheckForImports();      //check for required imports to make it work in C
                 ConvertTokens();        //convert the code to C
-                CreateCFile();          //write the C code into a file
-                CompileCFile(OutputFileName);   //compile the C file hopefully
-                Cleanup();              //cleanup all of the leftovers
+                CreateCFile("Main");          //write the C code into a file
+                CompileCFile("Main", OutputFileName);   //compile the C file hopefully
+                Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 Console.WriteLine("ERROR CODE: " + ErrorOpCode);
-                Cleanup();
+                Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
+                System.Environment.Exit(1);
             }
         }
         public static void ReadFile(string FilePath)
         {
+            Lines.Clear();
             ErrorOpCode = "r100";    //r for read, 100 for first potential error spot
 
-            //read the file's lines and add to the lines list
-            StreamReader streamReader = new StreamReader(FilePath);
-            string line = streamReader.ReadLine();
-            while (line != null)
+            //read the file's lines and add to the lines list, if it exists
+            if (File.Exists(FilePath))
             {
-                Lines.Add(line);
-                line = streamReader.ReadLine();
+                StreamReader streamReader = new StreamReader(FilePath);
+                string line = streamReader.ReadLine();
+                while (line != null)
+                {
+                    Lines.Add(line);
+                    line = streamReader.ReadLine();
+                }
+                streamReader.Close();
             }
-            streamReader.Close();
+            else
+            {
+                Console.WriteLine("ERROR: File cannot be found");
+                System.Environment.Exit(1);
+            }
 
             ErrorOpCode = "p100";    //p for parsing, 100 for first potential error spot
-
 
             //run through each line and parse tokens then add to the tokens list
             for (int i = 0; i < Lines.Count; i++)
@@ -67,7 +76,7 @@ namespace DawnLangCompiler
                 {//loop through length of string in Lines[i]
 
                     //if quotation marks, mark the beginning of quotation for tokens to be 1 token
-                    if (Lines[i].StartsWith("//") || Lines[i].StartsWith("#"))
+                    if (Lines[i].StartsWith("//"))
                         i += 1;
                     if (Lines[i][j] == '"' && Quotation == false)   //begin quotation
                         Quotation = true;
@@ -204,6 +213,11 @@ namespace DawnLangCompiler
                     case "}":
                         ConvertedTokens.Add("}");
                         break;
+                    case "#include":
+                        ReadFile(Tokens[i + 1]);
+                        SearchForFunctions();
+                        CheckForImports();
+                        break;
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
@@ -246,11 +260,11 @@ namespace DawnLangCompiler
             //    System.Console.WriteLine(tokens);
         }
 
-        private static void CreateCFile()
+        private static void CreateCFile(string FileName)
         {
             ErrorOpCode = "wc100";       //wc for writing c, 100 for first potential error spot
 
-            StreamWriter outputFile = new StreamWriter("TempFile.c");
+            StreamWriter outputFile = new StreamWriter(FileName + ".c");
 
             //add the required imports to the top of the c file
             for (int i = 0; i < RequiredImports.Count; i++)
@@ -261,7 +275,7 @@ namespace DawnLangCompiler
             outputFile.Close();
         }
 
-        private static void CompileCFile(string OutputFileName)
+        private static void CompileCFile(string FileName, string OutputFileName)
         {
             ErrorOpCode = "cf100";              //cf for compile file, 100 for first potential error spot
 
@@ -270,17 +284,19 @@ namespace DawnLangCompiler
 
             ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
 
-            Process.Start("gcc", "TempFile.c");
+            Process.Start("gcc", FileName + ".c -w");
             Thread.Sleep(50);                   //small micro sleep for program to not error moving file since it is so new
             File.Move("./a.out", "./" + OutputFileName);
         }
 
-        private static void Cleanup()
+        private static void Cleanup(string FileName)
         {
             ErrorOpCode = "cl100";              //cl for cleanup, 100 for first potential error spot
 
-            if (File.Exists("./TempFile.c"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
-                File.Delete("./TempFile.c");
+            if (File.Exists("./" + FileName + ".c"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
+                File.Delete("./" + FileName + ".c");
+            else
+                System.Environment.Exit(1);
         }
     }
 }
