@@ -26,12 +26,12 @@ namespace DawnLangCompiler
                 ConvertTokens();        //convert the code to C
                 CreateCFile("Main");          //write the C code into a file
                 CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                Cleanup("Main");              //cleanup all of the leftovers
+                //Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 Console.WriteLine("ERROR CODE: " + ErrorOpCode);
-                Cleanup("Main");
+                //Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
@@ -90,7 +90,7 @@ namespace DawnLangCompiler
                     else if (Lines[i][j] == ',' && Quotation == true)
                         TokenString += ",";
                     //if not semicolon space or parenthesis then add current char to string
-                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',')
+                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',' && Lines[i][j] != '{' && Lines[i][j] != '}')
                         TokenString += Lines[i][j];
                     else
                     //add the string to the tokens and set string to blank
@@ -100,6 +100,8 @@ namespace DawnLangCompiler
                             Tokens.Add(",");
                         if (Lines[i][j] == ')')
                             Tokens.Add(")");
+                        if (Lines[i][j] == '}')
+                            Tokens.Add("}");
                         TokenString = "";
                     }
                 }
@@ -209,6 +211,14 @@ namespace DawnLangCompiler
                             }
                             ConvertedTokens.Add("){");
                         }
+                        break;
+                    case "if":
+                        ConvertedTokens.Add("if(" + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + "){");
+                        break;
+                    case "else":
+                        ConvertedTokens.Add("else");
+                        if (Tokens[i + 1] != "if")
+                            ConvertedTokens[ConvertedTokens.Count - 1] += "{";
                         break;
                     case "}":
                         ConvertedTokens.Add("}");

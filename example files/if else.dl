@@ -1,0 +1,9 @@
+function main(){
+    int twelve = 12;
+    int thirteen = 13;
+    if(thirteen != thirteen){
+        print("Not equal!\n");
+    }else{
+        print("Equal!\n");
+    }
+}
