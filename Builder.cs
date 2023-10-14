@@ -183,7 +183,7 @@ namespace DawnLangCompiler
                                 }
                                 if (Tokens[j] == "string")
                                 {
-                                    ConvertedTokens.Add("string " + Tokens[j + 1]);
+                                    ConvertedTokens.Add("char " + Tokens[j + 1] + "[]");
                                     if (Tokens[j + 3] != "{")
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     StringVars.Add(Tokens[j + 1]);
