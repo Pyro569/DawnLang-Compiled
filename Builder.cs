@@ -84,6 +84,8 @@ namespace DawnLangCompiler
                         Tokens.Add(TokenString);
                         if (Lines[i][j] == ',')
                             Tokens.Add(",");
+                        if (Lines[i][j] == ')')
+                            Tokens.Add(")");
                         TokenString = "";
                     }
                 }
@@ -91,7 +93,7 @@ namespace DawnLangCompiler
 
             //debug purposes only
             //foreach (string token in Tokens)
-            //   System.Console.WriteLine(token);
+            //    System.Console.WriteLine(token);
         }
 
         private static void SearchForFunctions()
@@ -173,7 +175,7 @@ namespace DawnLangCompiler
                                 if (Tokens[j] == "int")
                                 {
                                     ConvertedTokens.Add("int " + Tokens[j + 1]);
-                                    if (Tokens[j + 2] != "{")
+                                    if (Tokens[j + 3] != "{")
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     IntVars.Add(Tokens[j + 1]);
                                     Tokens.Remove(Tokens[j]);
@@ -182,7 +184,7 @@ namespace DawnLangCompiler
                                 if (Tokens[j] == "string")
                                 {
                                     ConvertedTokens.Add("string " + Tokens[j + 1]);
-                                    if (Tokens[j + 2] != "{")
+                                    if (Tokens[j + 3] != "{")
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     StringVars.Add(Tokens[j + 1]);
                                     Tokens.Remove(Tokens[j]);
@@ -212,20 +214,20 @@ namespace DawnLangCompiler
                                     ConvertedTokens.Add(Tokens[j + 1]);
                                     if (Tokens[j + 2] == ",")
                                     {
-                                        ConvertedTokens.Add(",");
-                                        ConvertedTokens.Add(Tokens[j + 4]);
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     }
+                                    Tokens.Remove(Tokens[j + 1]);
                                 }
                                 else if (StringVars.Contains(Tokens[j + 1]))
                                 {
                                     ConvertedTokens.Add(Tokens[j + 1]);
                                     if (Tokens[j + 2] == ",")
                                     {
-                                        ConvertedTokens.Add(",");
-                                        ConvertedTokens.Add(Tokens[j + 4]);
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     }
+                                    Tokens.Remove(Tokens[j + 1]);
                                 }
-                                if (!IntVars.Contains(Tokens[j + 1]) && !StringVars.Contains(Tokens[j + 1]))
+                                else if (Tokens[j] == ")")
                                     break;
                             }
                             ConvertedTokens[ConvertedTokens.Count - 1] += ");";
