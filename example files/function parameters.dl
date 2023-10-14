@@ -1,0 +1,10 @@
+//initialize function named print_out with string parameter of ToPrint
+function print_out(string ToPrint){
+    print_str(ToPrint);
+}
+
+function main(){
+    string crab = "crab";
+    //call the print_out function with the parameter crab
+    print_out(crab);
+}

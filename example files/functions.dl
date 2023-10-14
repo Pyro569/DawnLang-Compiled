@@ -1,0 +1,10 @@
+//initialize function named hello_world()
+function hello_world(){
+    //print out "Hello, World!"
+    print("Hello, World!\n");
+}
+
+function main(){
+    //call the function named hello_world()
+    hello_world();
+}

@@ -1,0 +1,4 @@
+//function main = entry method, required for every DawnLang file
+function main(){
+    print("Hello, World\n");
+}

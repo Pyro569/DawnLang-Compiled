@@ -67,6 +67,8 @@ namespace DawnLangCompiler
                 {//loop through length of string in Lines[i]
 
                     //if quotation marks, mark the beginning of quotation for tokens to be 1 token
+                    if (Lines[i].StartsWith("//") || Lines[i].StartsWith("#"))
+                        i += 1;
                     if (Lines[i][j] == '"' && Quotation == false)   //begin quotation
                         Quotation = true;
                     else if (Lines[i][j] == '"' && Quotation == true)   //end quotation
@@ -75,6 +77,9 @@ namespace DawnLangCompiler
                     //add space to string if in quote and space
                     if (Lines[i][j] == ' ' && Quotation == true)
                         TokenString += " ";
+                    //add comma to string if in quote and space
+                    else if (Lines[i][j] == ',' && Quotation == true)
+                        TokenString += ",";
                     //if not semicolon space or parenthesis then add current char to string
                     else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',')
                         TokenString += Lines[i][j];
@@ -165,20 +170,20 @@ namespace DawnLangCompiler
                             ConvertedTokens.Add("};");
                         break;
                     case "function":
-                        if (Tokens[i + 1] == "main")
-                            ConvertedTokens.Add("int main(){");
+                        if (Tokens[i + 1] == "main")            //search for main function and add it
+                            ConvertedTokens.Add("int main(){"); //add main function to the c file
                         else
                         {
-                            ConvertedTokens.Add("void " + Tokens[i + 1] + "(");
+                            ConvertedTokens.Add("void " + Tokens[i + 1] + "("); //function declaration with function name
                             for (int j = i; j < Tokens.Count; j++)
                             {
                                 if (Tokens[j] == "int")
                                 {
-                                    ConvertedTokens.Add("int " + Tokens[j + 1]);
-                                    if (Tokens[j + 3] != "{")
+                                    ConvertedTokens.Add("int " + Tokens[j + 1]);    //add int and int name as parameter
+                                    if (Tokens[j + 3] != "{")                       //if the third token is not a left bracket, add a comma
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                    IntVars.Add(Tokens[j + 1]);
-                                    Tokens.Remove(Tokens[j]);
+                                    IntVars.Add(Tokens[j + 1]);                     //add the int variable name to int vars list
+                                    Tokens.Remove(Tokens[j]);                       //remove tokens[j] and tokens[j+1]
                                     Tokens.Remove(Tokens[j + 1]);
                                 }
                                 if (Tokens[j] == "string")
