@@ -2,7 +2,7 @@ DawnLang is a high-level compiled programming language with the speed of C and t
   
 To get started with DawnLang clone this repository and compile it. Next, make a file ending in the extension .dl, this will be our DawnLang file. To get started writing DawnLang, you can check out the example files folder in this repository or use the example below:  
 `#import dawnlang.io;`  
-``  
+`                           `  
 `function main(){`  
 `  print("Hello, World!\n");`  
 `}`  
