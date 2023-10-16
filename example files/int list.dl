@@ -1,0 +1,7 @@
+function main(){
+    //initialize integer list with 3 values
+    List<int> intList = [0, 9, 7];
+    //to print an element in a list, use print_list_element()
+    print_list_element(intList, 2);
+    //in this case it will print out the value 7 as the list index starts at 0
+}

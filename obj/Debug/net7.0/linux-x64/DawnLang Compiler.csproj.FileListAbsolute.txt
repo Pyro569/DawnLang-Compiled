@@ -1,0 +1,15 @@
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/linux-x64/DawnLang Compiler
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/linux-x64/DawnLang Compiler.deps.json
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/linux-x64/DawnLang Compiler.runtimeconfig.json
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/linux-x64/DawnLang Compiler.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/bin/Debug/net7.0/linux-x64/DawnLang Compiler.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.csproj.AssemblyReference.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.GeneratedMSBuildEditorConfig.editorconfig
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.AssemblyInfoInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.AssemblyInfo.cs
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.csproj.CoreCompileInputs.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/refint/DawnLang Compiler.dll
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.pdb
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/DawnLang Compiler.genruntimeconfig.cache
+/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/Debug/net7.0/linux-x64/ref/DawnLang Compiler.dll

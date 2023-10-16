@@ -12,8 +12,10 @@ namespace DawnLangCompiler
         private static List<string> ConvertedTokens = new List<string>();   //the C version of the tokens from the dawnlang file
         private static List<string> IntVars = new List<string>();           //names of integer variables stored in the program
         private static List<string> StringVars = new List<string>();        //names of string variables stored in the program
+        private static List<string> BoolVars = new List<string>();          //names of boolean variables
         private static List<string> RequiredImports = new List<string>();   //imports required to make the C code work
         private static List<string> FunctionNames = new List<string>();     //names of created functions
+        private static List<string> IntListNames = new List<string>();      //list of int list names
         private static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -26,12 +28,12 @@ namespace DawnLangCompiler
                 ConvertTokens();        //convert the code to C
                 CreateCFile("Main");          //write the C code into a file
                 CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                //Cleanup("Main");              //cleanup all of the leftovers
+                Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 Console.WriteLine("ERROR CODE: " + ErrorOpCode);
-                //Cleanup("Main");
+                Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
@@ -90,7 +92,8 @@ namespace DawnLangCompiler
                     else if (Lines[i][j] == ',' && Quotation == true)
                         TokenString += ",";
                     //if not semicolon space or parenthesis then add current char to string
-                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',' && Lines[i][j] != '{' && Lines[i][j] != '}')
+                    else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',' && Lines[i][j] != '{'
+                     && Lines[i][j] != '}' && Lines[i][j] != '[' && Lines[i][j] != ']')
                         TokenString += Lines[i][j];
                     else
                     //add the string to the tokens and set string to blank
@@ -102,6 +105,10 @@ namespace DawnLangCompiler
                             Tokens.Add(")");
                         if (Lines[i][j] == '}')
                             Tokens.Add("}");
+                        if (Lines[i][j] == '[')
+                            Tokens.Add("[");
+                        if (Lines[i][j] == ']')
+                            Tokens.Add("]");
                         TokenString = "";
                     }
                 }
@@ -130,6 +137,7 @@ namespace DawnLangCompiler
                 "print",
                 "print_int",
                 "print_str",
+                "bool",
             };
 
             //the needed import for said dawnlang function
@@ -137,6 +145,7 @@ namespace DawnLangCompiler
                 "<stdio.h>",    //print
                 "<stdio.h>",    //print_int
                 "<stdio.h>",    //print_str
+                "<stdbool.h>"   //bool
             };
 
             ErrorOpCode = "is100";  //is for import search
@@ -165,6 +174,10 @@ namespace DawnLangCompiler
                     case "int":
                         ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + ";");  //int a = 17;
                         IntVars.Add(Tokens[i + 1]);
+                        break;
+                    case "bool":
+                        ConvertedTokens.Add("bool " + Tokens[i + 1] + " = " + Tokens[i + 3] + ";");
+                        BoolVars.Add(Tokens[i + 1]);
                         break;
                     case "string":
                         ConvertedTokens.Add("char " + Tokens[i + 1] + "[]" + Tokens[i + 2] + Tokens[i + 3] + ";");  //string hello = "hello world!"; comes out to char[] hello = "hello world!';
@@ -228,9 +241,28 @@ namespace DawnLangCompiler
                         SearchForFunctions();
                         CheckForImports();
                         break;
+                    case "List<int>":
+                        IntListNames.Add(Tokens[i + 1]);
+                        ConvertedTokens.Add("int " + Tokens[i + 1] + "[] = {");
+                        for (int z = i + 5; z < Tokens.Count; z++)
+                            if (Tokens[z] != "]")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                break;
+                            }
+                        break;
+                    case "print_list_element":
+                        if (IntListNames.Contains(Tokens[i + 1]))
+                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                        break;
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
+                            if (Tokens[i + 1] == "=")
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                        if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
                             if (Tokens[i + 1] == "=")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
                         if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
@@ -289,7 +321,7 @@ namespace DawnLangCompiler
         {
             ErrorOpCode = "cf100";              //cf for compile file, 100 for first potential error spot
 
-            if (File.Exists(OutputFileName))    //if the compiled binary already exists with that name, delete it/overwrite it
+            if (File.Exists(OutputFileName))    //if thex compiled binary already exists with that name, delete it/overwrite it
                 File.Delete(OutputFileName);
 
             ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
