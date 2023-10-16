@@ -1,3 +1,4 @@
+#import dawnlang.io;
 //initialize function named hello_world()
 function hello_world(){
     //print out "Hello, World!"

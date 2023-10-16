@@ -1,3 +1,6 @@
+#import dawnlang.data.types;
+#import dawnlang.io;
+
 function main(){
     //initialize boolean with value false
     bool TrueFalse = false;

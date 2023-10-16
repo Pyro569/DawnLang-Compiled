@@ -1,3 +1,5 @@
+#import dawnlang.io;
+
 function main(){
     //initialize integer list with 3 values
     List<int> intList = [0, 9, 7];

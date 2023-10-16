@@ -1,3 +1,5 @@
+#import dawnlang.io;
+
 function main(){
     //intialize int variable named twelve with a value of 12
     int twelve = 12;

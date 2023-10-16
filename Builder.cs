@@ -24,7 +24,6 @@ namespace DawnLangCompiler
             {
                 ReadFile(FilePath);     //get the tokens of the file
                 SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
-                CheckForImports();      //check for required imports to make it work in C
                 ConvertTokens();        //convert the code to C
                 CreateCFile("Main");          //write the C code into a file
                 CompileCFile("Main", OutputFileName);   //compile the C file hopefully
@@ -78,7 +77,7 @@ namespace DawnLangCompiler
                 {//loop through length of string in Lines[i]
 
                     //if quotation marks, mark the beginning of quotation for tokens to be 1 token
-                    if (Lines[i].StartsWith("//"))
+                    if (Lines[i].Contains("//"))
                         i += 1;
                     if (Lines[i][j] == '"' && Quotation == false)   //begin quotation
                         Quotation = true;
@@ -128,32 +127,6 @@ namespace DawnLangCompiler
                     if (Tokens[i + 1] != "main")
                         FunctionNames.Add(Tokens[i + 1]);
             //if function is declared other than main, add to function name list
-        }
-
-        private static void CheckForImports()
-        {
-            //list of dawnlang functions that will require some kind of import in C code
-            List<string> FunctionsRequiringImports = new List<string>(){
-                "print",
-                "print_int",
-                "print_str",
-                "bool",
-            };
-
-            //the needed import for said dawnlang function
-            List<string> CorrespondingImport = new List<string>(){
-                "<stdio.h>",    //print
-                "<stdio.h>",    //print_int
-                "<stdio.h>",    //print_str
-                "<stdbool.h>"   //bool
-            };
-
-            ErrorOpCode = "is100";  //is for import search
-
-            for (int i = 0; i < FunctionsRequiringImports.Count; i++)   //loop through each function in the FunctionsRequiringImports list
-                if (Tokens.Contains(FunctionsRequiringImports[i]) && !RequiredImports.Contains(CorrespondingImport[i]))
-                    //if the tokens list contains said function and the requiredimports list does not already have it, add it
-                    RequiredImports.Add(CorrespondingImport[i]);
         }
 
         private static void ConvertTokens()
@@ -239,7 +212,18 @@ namespace DawnLangCompiler
                     case "#include":
                         ReadFile(Tokens[i + 1]);
                         SearchForFunctions();
-                        CheckForImports();
+                        break;
+                    case "#import":
+                        ConvertedTokens.Add("#include ");
+                        switch (Tokens[i + 1])
+                        {
+                            case "dawnlang.io":
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdio.h>";
+                                break;
+                            case "dawnlang.data.types":
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdbool.h>";
+                                break;
+                        }
                         break;
                     case "List<int>":
                         IntListNames.Add(Tokens[i + 1]);

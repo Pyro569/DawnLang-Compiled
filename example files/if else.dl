@@ -1,3 +1,5 @@
+#import dawnlang.io;
+
 function main(){
     int twelve = 12;
     int thirteen = 13;
