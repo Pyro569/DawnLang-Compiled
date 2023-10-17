@@ -5,7 +5,7 @@ function main(){
         int integer = 12;
         printf("Value of integer is: %d\n", integer);
     ]-End
-    integer = 27;
+    integer = 28;
     print("Value of integer is: ");
     print_int(integer);
 }

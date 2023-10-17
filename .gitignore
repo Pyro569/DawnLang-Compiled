@@ -1,4 +1,4 @@
 /bin/
 /obj/
-./testing
-./testrun.sh
+testing
+testrun.sh
