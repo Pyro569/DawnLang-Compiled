@@ -16,6 +16,8 @@ namespace DawnLangCompiler
         private static List<string> RequiredImports = new List<string>();   //imports required to make the C code work
         private static List<string> FunctionNames = new List<string>();     //names of created functions
         private static List<string> IntListNames = new List<string>();      //list of int list names
+        private static List<string> StringListNames = new List<string>();
+        private static List<string> BoolListNames = new List<string>();
         private static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -164,7 +166,7 @@ namespace DawnLangCompiler
                         break;
                     case "then":
                         if (Tokens[i + 1] == "end")         //end a for loop with a };
-                            ConvertedTokens.Add("};");
+                            ConvertedTokens.Add("}");
                         break;
                     case "function":
                         if (Tokens[i + 1] == "main")            //search for main function and add it
@@ -237,14 +239,42 @@ namespace DawnLangCompiler
                                 break;
                             }
                         break;
+                    case "List<string>":
+                        StringListNames.Add(Tokens[i + 1]);
+                        ConvertedTokens.Add("char " + Tokens[i + 1] + "[][255] = {");
+                        for (int z = i + 5; z < Tokens.Count; z++)
+                            if (Tokens[z] != "]")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                break;
+                            }
+                        break;
+                    case "List<bool>":
+                        BoolListNames.Add(Tokens[i + 1]);
+                        ConvertedTokens.Add("bool " + Tokens[i + 1] + "[] = {");
+                        for (int z = i + 5; z < Tokens.Count; z++)
+                            if (Tokens[z] != "]")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                break;
+                            }
+                        break;
                     case "print_list_element":
                         if (IntListNames.Contains(Tokens[i + 1]))
                             ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                        if (BoolListNames.Contains(Tokens[i + 1]))
+                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                        if (StringListNames.Contains(Tokens[i + 1]))
+                            ConvertedTokens.Add("printf(\"%s\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
                         break;
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
-                            if (Tokens[i + 1] == "=")
+                            if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
                         if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
                             if (Tokens[i + 1] == "=")
