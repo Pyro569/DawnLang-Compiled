@@ -1,0 +1,1 @@
+dotnet run "-br" "testfile.dl" "testing"

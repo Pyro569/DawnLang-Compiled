@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/DawnLang Compiler.csproj",
+      "projectUniqueName": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiled/DawnLang Compiler.csproj",
       "projectName": "DawnLang Compiler",
-      "projectPath": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/DawnLang Compiler.csproj",
+      "projectPath": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiled/DawnLang Compiler.csproj",
       "packagesPath": "/home/nathan/.nuget/packages/",
-      "outputPath": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiler/obj/",
+      "outputPath": "/home/nathan/Documents/Programming/Projects/DawnLang-Compiled/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/nathan/.nuget/NuGet/NuGet.Config"

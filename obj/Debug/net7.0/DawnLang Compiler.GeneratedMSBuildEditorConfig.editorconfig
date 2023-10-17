@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = DawnLang_Compiler
-build_property.ProjectDir = /home/nathan/Documents/Programming/Projects/DawnLang-Compiler/
+build_property.ProjectDir = /home/nathan/Documents/Programming/Projects/DawnLang-Compiled/
