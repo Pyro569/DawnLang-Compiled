@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace DawnLangCompiler
 {
-    class Builder
+    class Tokenization
     {
         private static List<string> Lines = new List<string>();     //lines in the original dawnlang file
         private static List<string> Tokens = new List<string>();    //tokens from the original dawnlang file
-        private static List<string> ConvertedTokens = new List<string>();   //the C version of the tokens from the dawnlang file
+        public static List<string> ConvertedTokens = new List<string>();   //the C version of the tokens from the dawnlang file
         private static List<string> IntVars = new List<string>();           //names of integer variables stored in the program
         private static List<string> StringVars = new List<string>();        //names of string variables stored in the program
         private static List<string> BoolVars = new List<string>();          //names of boolean variables
-        private static List<string> RequiredImports = new List<string>();   //imports required to make the C code work
         private static List<string> FunctionNames = new List<string>();     //names of created functions
         private static List<string> IntListNames = new List<string>();      //list of int list names
         private static List<string> StringListNames = new List<string>();
         private static List<string> BoolListNames = new List<string>();
-        private static bool CCode = false;
         public static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -28,14 +25,14 @@ namespace DawnLangCompiler
                 ReadFile(FilePath);     //get the tokens of the file
                 SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
                 ConvertTokens();        //convert the code to C
-                CreateCFile("Main");          //write the C code into a file
-                CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                Cleanup("Main");              //cleanup all of the leftovers
+                Creation.CreateCFile("Main");          //write the C code into a file
+                Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
+                Creation.Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 ErrorCodeIO.ErrorCodeOutput();
-                Cleanup("Main");
+                Creation.Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
@@ -277,7 +274,6 @@ namespace DawnLangCompiler
                     case "C-Code":
                         if (Tokens[i + 1] == "[")
                         {
-                            CCode = true;
                             int location = 0;
                             for (int l = 0; l < Lines.Count; l++)
                                 if (Lines[l].Contains("C-Code["))
@@ -358,45 +354,6 @@ namespace DawnLangCompiler
             //debug purposes only
             //foreach (string tokens in ConvertedTokens)
             //    System.Console.WriteLine(tokens);
-        }
-
-        private static void CreateCFile(string FileName)
-        {
-            ErrorOpCode = "wc100";       //wc for writing c, 100 for first potential error spot
-
-            StreamWriter outputFile = new StreamWriter(FileName + ".c");
-
-            //add the required imports to the top of the c file
-            for (int i = 0; i < RequiredImports.Count; i++)
-                outputFile.WriteLine("#include " + RequiredImports[i] + "\n");
-            //write each converted token to the c file
-            foreach (string codeLines in ConvertedTokens)
-                outputFile.WriteLine(codeLines);
-            outputFile.Close();
-        }
-
-        private static void CompileCFile(string FileName, string OutputFileName)
-        {
-            ErrorOpCode = "cf100";              //cf for compile file, 100 for first potential error spot
-
-            if (File.Exists(OutputFileName))    //if the compiled binary already exists with that name, delete it/overwrite it
-                File.Delete(OutputFileName);
-
-            ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
-
-            Process.Start("gcc", FileName + ".c -w");
-            Thread.Sleep(50);                   //small micro sleep for program to not error moving file since it is so new
-            File.Move("./a.out", "./" + OutputFileName);
-        }
-
-        private static void Cleanup(string FileName)
-        {
-            ErrorOpCode = "cl100";              //cl for cleanup, 100 for first potential error spot
-
-            if (File.Exists("./" + FileName + ".c"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
-                File.Delete("./" + FileName + ".c");
-            else
-                System.Environment.Exit(1);
         }
     }
 }

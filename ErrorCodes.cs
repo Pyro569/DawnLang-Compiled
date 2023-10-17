@@ -4,7 +4,7 @@ namespace DawnLangCompiler
     {
         public static void ErrorCodeOutput()
         {
-            switch (Builder.ErrorOpCode)
+            switch (Tokenization.ErrorOpCode)
             {
                 case "cl100":
                     Console.WriteLine("ERROR: Error has been encountered after compilation, DawnLang program is fine and usable");
