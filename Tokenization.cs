@@ -351,7 +351,6 @@ namespace DawnLangCompiler
                             }
                         }
                         break;
-                        break;
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
