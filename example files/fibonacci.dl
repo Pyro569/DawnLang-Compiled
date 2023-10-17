@@ -4,5 +4,5 @@ function main(){
     int a = 0;
     int b = 1;
     int c = 1;
-    for i = 1 to 30 do print_int(a); c = a; a = b; b += c; then end;
+    for i = 1 to 32 do print_int(a); c = a; a = b; b += c; then end;
 }

@@ -18,6 +18,7 @@ namespace DawnLangCompiler
         private static List<string> IntListNames = new List<string>();      //list of int list names
         private static List<string> StringListNames = new List<string>();
         private static List<string> BoolListNames = new List<string>();
+        private static bool CCode = false;
         private static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -110,6 +111,8 @@ namespace DawnLangCompiler
                             Tokens.Add("[");
                         if (Lines[i][j] == ']')
                             Tokens.Add("]");
+                        if (Lines[i][j] == ';')
+                            Tokens.Add(";");
                         TokenString = "";
                     }
                 }
@@ -271,42 +274,83 @@ namespace DawnLangCompiler
                         if (StringListNames.Contains(Tokens[i + 1]))
                             ConvertedTokens.Add("printf(\"%s\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
                         break;
+                    case "C-Code":
+                        if (Tokens[i + 1] == "[")
+                        {
+                            CCode = true;
+                            int location = 0;
+                            for (int l = 0; l < Lines.Count; l++)
+                                if (Lines[l].Contains("C-Code["))
+                                {
+                                    location = l;
+                                    break;
+                                }
+                            for (int b = location + 1; b < Lines.Count; b++)
+                                if (!Lines[b].Contains("]-End"))
+                                    ConvertedTokens.Add(Lines[b]);
+                                else
+                                    break;
+                            for (int n = i; n < Tokens.Count; n++)
+                            {
+                                if (Tokens[n] == "]-End")
+                                    break;
+                                else if (Tokens[n] == "int")
+                                {
+                                    IntVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                                else if (Tokens[n] == "char[]")
+                                {
+                                    StringVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                                else if (Tokens[n] == "bool")
+                                {
+                                    BoolVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                            }
+                        }
+                        break;
                     default:
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
                             if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
-                        if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
-                            if (Tokens[i + 1] == "=")
-                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
-                        if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
-                        {
-                            ConvertedTokens.Add(Tokens[i] + "(");
-                            for (int j = i; j < Tokens.Count; j++)
-                            {
-                                if (IntVars.Contains(Tokens[j + 1]))
+                            else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
+                                if (Tokens[i + 1] == "=")
+                                    ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                                else if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
                                 {
-                                    ConvertedTokens.Add(Tokens[j + 1]);
-                                    if (Tokens[j + 2] == ",")
+                                    ConvertedTokens.Add(Tokens[i] + "(");
+                                    for (int j = i; j < Tokens.Count; j++)
                                     {
-                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                        if (IntVars.Contains(Tokens[j + 1]))
+                                        {
+                                            ConvertedTokens.Add(Tokens[j + 1]);
+                                            if (Tokens[j + 2] == ",")
+                                            {
+                                                ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                            }
+                                            Tokens.Remove(Tokens[j + 1]);
+                                        }
+                                        else if (StringVars.Contains(Tokens[j + 1]))
+                                        {
+                                            ConvertedTokens.Add(Tokens[j + 1]);
+                                            if (Tokens[j + 2] == ",")
+                                            {
+                                                ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                            }
+                                            Tokens.Remove(Tokens[j + 1]);
+                                        }
+                                        else if (Tokens[j] == ")")
+                                            break;
                                     }
-                                    Tokens.Remove(Tokens[j + 1]);
+                                    ConvertedTokens[ConvertedTokens.Count - 1] += ");";
                                 }
-                                else if (StringVars.Contains(Tokens[j + 1]))
-                                {
-                                    ConvertedTokens.Add(Tokens[j + 1]);
-                                    if (Tokens[j + 2] == ",")
-                                    {
-                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                    }
-                                    Tokens.Remove(Tokens[j + 1]);
-                                }
-                                else if (Tokens[j] == ")")
-                                    break;
-                            }
-                            ConvertedTokens[ConvertedTokens.Count - 1] += ");";
-                        }
                         break;
                 }
             }
