@@ -220,7 +220,7 @@ namespace DawnLangCompiler
                         switch (Tokens[i + 1])
                         {
                             case "dawnlang.io":
-                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdio.h>";
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdio.h>\n#include <iostream>";
                                 break;
                             case "dawnlang.data.types":
                                 ConvertedTokens[ConvertedTokens.Count - 1] += "<stdbool.h>";
@@ -310,6 +310,47 @@ namespace DawnLangCompiler
                                 }
                             }
                         }
+                        break;
+                    case "C++-Code":
+                        if (Tokens[i + 1] == "[")
+                        {
+                            int location = 0;
+                            for (int l = 0; l < Lines.Count; l++)
+                                if (Lines[l].Contains("C++-Code["))
+                                {
+                                    location = l;
+                                    break;
+                                }
+                            for (int b = location + 1; b < Lines.Count; b++)
+                                if (!Lines[b].Contains("]-End"))
+                                    ConvertedTokens.Add(Lines[b]);
+                                else
+                                    break;
+                            for (int n = i; n < Tokens.Count; n++)
+                            {
+                                if (Tokens[n] == "]-End")
+                                    break;
+                                else if (Tokens[n] == "int")
+                                {
+                                    IntVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                                else if (Tokens[n] == "std::string" || Tokens[n] == "string")
+                                {
+                                    StringVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                                else if (Tokens[n] == "bool")
+                                {
+                                    BoolVars.Add(Tokens[n + 1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
+                                }
+                            }
+                        }
+                        break;
                         break;
                     default:
                         //change the value of an int variable

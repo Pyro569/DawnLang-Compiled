@@ -8,4 +8,9 @@ function main(){
     integer = 28;
     print("Value of integer is: ");
     print_int(integer);
+    C++-Code[
+        std::cout<<"test\n";
+        int value = 17;
+    ]-End
+    print_int(value);
 }

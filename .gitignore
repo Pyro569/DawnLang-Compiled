@@ -1,4 +1,4 @@
 bin/
 obj/
 testing
-testrun
+testrun.sh
