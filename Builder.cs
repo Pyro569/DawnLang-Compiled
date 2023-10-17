@@ -19,7 +19,7 @@ namespace DawnLangCompiler
         private static List<string> StringListNames = new List<string>();
         private static List<string> BoolListNames = new List<string>();
         private static bool CCode = false;
-        private static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
+        public static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
         {
@@ -34,7 +34,7 @@ namespace DawnLangCompiler
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
-                Console.WriteLine("ERROR CODE: " + ErrorOpCode);
+                ErrorCodeIO.ErrorCodeOutput();
                 Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
@@ -379,7 +379,7 @@ namespace DawnLangCompiler
         {
             ErrorOpCode = "cf100";              //cf for compile file, 100 for first potential error spot
 
-            if (File.Exists(OutputFileName))    //if thex compiled binary already exists with that name, delete it/overwrite it
+            if (File.Exists(OutputFileName))    //if the compiled binary already exists with that name, delete it/overwrite it
                 File.Delete(OutputFileName);
 
             ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
