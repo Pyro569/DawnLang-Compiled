@@ -1,6 +1,5 @@
 bin/
 obj/
 DawnLang-Compiled.sln
-dlc.csproj
 testing
 testrun.sh

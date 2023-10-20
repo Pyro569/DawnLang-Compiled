@@ -1,1 +1,1 @@
-dotnet run "-br" "testfile.dl" "testing"
+dotnet run "dlc.csproj" "-br" "testfile.dl" "testing"
