@@ -1,4 +1,5 @@
 bin/
 obj/
+DawnLang-Compiled.sln
 testing
 testrun.sh

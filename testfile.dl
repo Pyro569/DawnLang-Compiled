@@ -1,16 +1,21 @@
 #import dawnlang.io;
 
 function main(){
-    C-Code[
-        int integer = 12;
-        printf("Value of integer is: %d\n", integer);
-    ]-End
-    integer = 28;
-    print("Value of integer is: ");
-    print_int(integer);
     C++-Code[
-        std::cout<<"test\n";
-        int value = 17;
+        std::cout<<"Hello, World!\n";
     ]-End
-    print_int(value);
+    
+    C-Code[
+        printf("Goodbye, World!\n");
+    ]-End
+
+    print("DawnLang is cool\n");
+
+    C++-Code[
+        std::cout<<"You can write C++ code\n";
+    ]-End
+
+    C-Code[
+        printf("Or C Code!\n");
+    ]-End
 }

@@ -27,12 +27,12 @@ namespace DawnLangCompiler
                 ConvertTokens();        //convert the code to C
                 Creation.CreateCFile("Main");          //write the C code into a file
                 Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                Creation.Cleanup("Main");              //cleanup all of the leftovers
+                //Creation.Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 ErrorCodeIO.ErrorCodeOutput();
-                Creation.Cleanup("Main");
+                //Creation.Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
@@ -133,6 +133,7 @@ namespace DawnLangCompiler
 
         private static void ConvertTokens()
         {
+            int location = 0;
             //convert tokens to c code
             ErrorOpCode = "c100";       //c for conversion, 100 for first potential error spot
 
@@ -274,8 +275,7 @@ namespace DawnLangCompiler
                     case "C-Code":
                         if (Tokens[i + 1] == "[")
                         {
-                            int location = 0;
-                            for (int l = 0; l < Lines.Count; l++)
+                            for (int l = location; l < Lines.Count; l++)
                                 if (Lines[l].Contains("C-Code["))
                                 {
                                     location = l;
@@ -307,6 +307,10 @@ namespace DawnLangCompiler
                                     BoolVars.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
+                                }else if(Tokens[n] == "void"){
+                                    FunctionNames.Add(Tokens[n+1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
                                 }
                             }
                         }
@@ -314,8 +318,7 @@ namespace DawnLangCompiler
                     case "C++-Code":
                         if (Tokens[i + 1] == "[")
                         {
-                            int location = 0;
-                            for (int l = 0; l < Lines.Count; l++)
+                            for (int l = location; l < Lines.Count; l++)
                                 if (Lines[l].Contains("C++-Code["))
                                 {
                                     location = l;
@@ -368,18 +371,14 @@ namespace DawnLangCompiler
                                         {
                                             ConvertedTokens.Add(Tokens[j + 1]);
                                             if (Tokens[j + 2] == ",")
-                                            {
                                                 ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                            }
                                             Tokens.Remove(Tokens[j + 1]);
                                         }
                                         else if (StringVars.Contains(Tokens[j + 1]))
                                         {
                                             ConvertedTokens.Add(Tokens[j + 1]);
                                             if (Tokens[j + 2] == ",")
-                                            {
                                                 ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                            }
                                             Tokens.Remove(Tokens[j + 1]);
                                         }
                                         else if (Tokens[j] == ")")
