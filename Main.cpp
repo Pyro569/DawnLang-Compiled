@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <iostream>
+void printInC(
+char message[]
+){
+        printf("%s\n",message);
+}
 int main(){
-        std::cout<<"Hello, World!\n";
-        printf("Goodbye, World!\n");
-printf("DawnLang is cool\n");
-        std::cout<<"You can write C++ code\n";
-        printf("Or C Code!\n");
+char leo[]="leo";
+printInC(
+leo);
 }

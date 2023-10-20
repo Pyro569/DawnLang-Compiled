@@ -1,21 +1,12 @@
 #import dawnlang.io;
 
+function printInC(string message){
+    C-Code[
+        printf("%s\n",message);
+    ]-End
+}
+
 function main(){
-    C++-Code[
-        std::cout<<"Hello, World!\n";
-    ]-End
-    
-    C-Code[
-        printf("Goodbye, World!\n");
-    ]-End
-
-    print("DawnLang is cool\n");
-
-    C++-Code[
-        std::cout<<"You can write C++ code\n";
-    ]-End
-
-    C-Code[
-        printf("Or C Code!\n");
-    ]-End
+    string HelloWorld = "Hello, World!\n";
+    printInC(HelloWorld);
 }

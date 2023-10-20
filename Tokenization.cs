@@ -27,12 +27,12 @@ namespace DawnLangCompiler
                 ConvertTokens();        //convert the code to C
                 Creation.CreateCFile("Main");          //write the C code into a file
                 Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                //Creation.Cleanup("Main");              //cleanup all of the leftovers
+                Creation.Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 ErrorCodeIO.ErrorCodeOutput();
-                //Creation.Cleanup("Main");
+                Creation.Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
@@ -180,7 +180,7 @@ namespace DawnLangCompiler
                                 if (Tokens[j] == "int")
                                 {
                                     ConvertedTokens.Add("int " + Tokens[j + 1]);    //add int and int name as parameter
-                                    if (Tokens[j + 3] != "{")                       //if the third token is not a left bracket, add a comma
+                                    if (Tokens[j + 2] != ")")                       //if the third token is not a left bracket, add a comma
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     IntVars.Add(Tokens[j + 1]);                     //add the int variable name to int vars list
                                     Tokens.Remove(Tokens[j]);                       //remove tokens[j] and tokens[j+1]
@@ -189,7 +189,7 @@ namespace DawnLangCompiler
                                 if (Tokens[j] == "string")
                                 {
                                     ConvertedTokens.Add("char " + Tokens[j + 1] + "[]");
-                                    if (Tokens[j + 3] != "{")
+                                    if (Tokens[j + 2] != ")")
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     StringVars.Add(Tokens[j + 1]);
                                     Tokens.Remove(Tokens[j]);
@@ -350,19 +350,23 @@ namespace DawnLangCompiler
                                     BoolVars.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
+                                }else if(Tokens[n] == "void"){
+                                    FunctionNames.Add(Tokens[n+1]);
+                                    Tokens.Remove(Tokens[n]);
+                                    Tokens.Remove(Tokens[n + 1]);
                                 }
                             }
                         }
                         break;
                     default:
                         //change the value of an int variable
-                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
+                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int"){
                             if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
-                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
-                            else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
-                                if (Tokens[i + 1] == "=")
-                                    ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
-                                else if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");}
+                        else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool"){
+                            if (Tokens[i + 1] == "=")
+                                    ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");}
+                        else if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
                                 {
                                     ConvertedTokens.Add(Tokens[i] + "(");
                                     for (int j = i; j < Tokens.Count; j++)
