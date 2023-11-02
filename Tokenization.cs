@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace DawnLangCompiler
 {
@@ -98,18 +99,8 @@ namespace DawnLangCompiler
                     //add the string to the tokens and set string to blank
                     {
                         Tokens.Add(TokenString);
-                        if (Lines[i][j] == ',')
-                            Tokens.Add(",");
-                        if (Lines[i][j] == ')')
-                            Tokens.Add(")");
-                        if (Lines[i][j] == '}')
-                            Tokens.Add("}");
-                        if (Lines[i][j] == '[')
-                            Tokens.Add("[");
-                        if (Lines[i][j] == ']')
-                            Tokens.Add("]");
-                        if (Lines[i][j] == ';')
-                            Tokens.Add(";");
+                        if (Lines[i][j] == ',' || Lines[i][j] == ')' || Lines[i][j] == '}' || Lines[i][j] == '[' || Lines[i][j] == ']' || Lines[i][j] == ';')
+                            Tokens.Add(Lines[i][j] + "");
                         TokenString = "";
                     }
                 }
@@ -125,9 +116,8 @@ namespace DawnLangCompiler
             ErrorOpCode = "fs100"; //fs for function search, 100 for operation spot
                                    //loop through every function and check if it contains function declaration
             for (int i = 0; i < Tokens.Count; i++)
-                if (Tokens[i] == "function")
-                    if (Tokens[i + 1] != "main")
-                        FunctionNames.Add(Tokens[i + 1]);
+                if (Tokens[i] == "function" && Tokens[i + 1] != "main")
+                    FunctionNames.Add(Tokens[i + 1]);
             //if function is declared other than main, add to function name list
         }
 
@@ -163,7 +153,9 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
-                        ConvertedTokens.Add("for(int i = " + Tokens[i + 3] + "; i <= " + Tokens[i + 5] + "; i++){");    //create a for loop
+                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 7] + Tokens[i + 8] + Tokens[i + 9] + "; " + Tokens[i + 12] + " ){");    //create a for loop
+                        for (int z = 0; z < 12; z++)
+                            Tokens.Remove(Tokens[z]);
                         break;
                     case "then":
                         if (Tokens[i + 1] == "end")         //end a for loop with a };
@@ -307,8 +299,10 @@ namespace DawnLangCompiler
                                     BoolVars.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
-                                }else if(Tokens[n] == "void"){
-                                    FunctionNames.Add(Tokens[n+1]);
+                                }
+                                else if (Tokens[n] == "void")
+                                {
+                                    FunctionNames.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
                                 }
@@ -350,8 +344,10 @@ namespace DawnLangCompiler
                                     BoolVars.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
-                                }else if(Tokens[n] == "void"){
-                                    FunctionNames.Add(Tokens[n+1]);
+                                }
+                                else if (Tokens[n] == "void")
+                                {
+                                    FunctionNames.Add(Tokens[n + 1]);
                                     Tokens.Remove(Tokens[n]);
                                     Tokens.Remove(Tokens[n + 1]);
                                 }
@@ -360,36 +356,38 @@ namespace DawnLangCompiler
                         break;
                     default:
                         //change the value of an int variable
-                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int"){
+                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
+                        {
                             if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
-                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");}
-                        else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool"){
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                        }
+                        else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
+                        {
                             if (Tokens[i + 1] == "=")
-                                    ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");}
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                        }
                         else if (FunctionNames.Contains(Tokens[i]) && Tokens[i - 1] != "function")
+                        {
+                            ConvertedTokens.Add(Tokens[i] + "(");
+                            for (int j = i; j < Tokens.Count; j++)
+                                if (IntVars.Contains(Tokens[j + 1]))
                                 {
-                                    ConvertedTokens.Add(Tokens[i] + "(");
-                                    for (int j = i; j < Tokens.Count; j++)
-                                    {
-                                        if (IntVars.Contains(Tokens[j + 1]))
-                                        {
-                                            ConvertedTokens.Add(Tokens[j + 1]);
-                                            if (Tokens[j + 2] == ",")
-                                                ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                            Tokens.Remove(Tokens[j + 1]);
-                                        }
-                                        else if (StringVars.Contains(Tokens[j + 1]))
-                                        {
-                                            ConvertedTokens.Add(Tokens[j + 1]);
-                                            if (Tokens[j + 2] == ",")
-                                                ConvertedTokens[ConvertedTokens.Count - 1] += ",";
-                                            Tokens.Remove(Tokens[j + 1]);
-                                        }
-                                        else if (Tokens[j] == ")")
-                                            break;
-                                    }
-                                    ConvertedTokens[ConvertedTokens.Count - 1] += ");";
+                                    ConvertedTokens.Add(Tokens[j + 1]);
+                                    if (Tokens[j + 2] == ",")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                    Tokens.Remove(Tokens[j + 1]);
                                 }
+                                else if (StringVars.Contains(Tokens[j + 1]))
+                                {
+                                    ConvertedTokens.Add(Tokens[j + 1]);
+                                    if (Tokens[j + 2] == ",")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += ",";
+                                    Tokens.Remove(Tokens[j + 1]);
+                                }
+                                else if (Tokens[j] == ")")
+                                    break;
+                            ConvertedTokens[ConvertedTokens.Count - 1] += ");";
+                        }
                         break;
                 }
             }
@@ -397,6 +395,13 @@ namespace DawnLangCompiler
             //debug purposes only
             //foreach (string tokens in ConvertedTokens)
             //    System.Console.WriteLine(tokens);
+        }
+
+        public static void LogTokens()  //write all tokens to a file in order to analyze them to potentially find the error
+        {
+            using (StreamWriter streamWriter = new StreamWriter("Tokens.txt"))
+                for (int i = 0; i < ConvertedTokens.Count; i++)
+                    streamWriter.Write(ConvertedTokens[i] + " ");
         }
     }
 }

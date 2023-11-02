@@ -1,4 +1,5 @@
 function main(){
-    //starts at 1, ends at 100 (including 100)
-    for i = 1 to 100 do print_int(i) then end;
+    for(int i = 0; i < 3; i++){
+        print("Hello, World!\n");
+    }
 }

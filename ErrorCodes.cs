@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace DawnLangCompiler
 {
     class ErrorCodeIO
@@ -14,6 +16,7 @@ namespace DawnLangCompiler
                     break;
                 case "cf200":
                     Console.WriteLine("ERROR: Error has occured during file compilation, this is most likely an error within your DawnLang code");
+                    cf200();
                     break;
                 case "wc100":
                     Console.WriteLine("ERROR: Error has occured during pre-compilation");
@@ -34,5 +37,59 @@ namespace DawnLangCompiler
         }
 
         //TODO: System that is able to parse and search for errors in the DawnLang file if the error code is cf200, fs100 or wc100
+        private static void cf200()
+        {
+            Tokenization.LogTokens();
+
+            List<string> ErrorCodedTokens = new List<string>();
+
+            //read the Tokens.txt file
+            if (File.Exists("Tokens.txt"))
+            {
+                StreamReader streamReader = new StreamReader("Tokens.txt");
+                string line = streamReader.ReadLine();
+                while (line != null)
+                {
+                    ErrorCodedTokens.Add(line);
+                    line = streamReader.ReadLine();
+                }
+                streamReader.Close();
+            }
+
+            //tokenize the file
+            List<string> Tokens = new List<string>();
+            for (int i = 0; i < ErrorCodedTokens.Count; i++)
+            {
+                string TokenString = "";
+
+                for (int j = 0; j < ErrorCodedTokens[i].Length; j++)
+                    if (ErrorCodedTokens[i][j] == ';' || ErrorCodedTokens[i][j] == '{' || ErrorCodedTokens[i][j] == '}')
+                    {
+                        TokenString += ErrorCodedTokens[i][j];
+                        Tokens.Add(TokenString);
+                        TokenString = "";
+                    }
+                    else
+                        TokenString += ErrorCodedTokens[i][j];
+            }
+
+            //ever growning list of C Keywords that I can think of
+            //all keywords missing final letter in hopes that maybe, just maybe, the user error was forgetting the last character
+            List<string> CKeywords = new List<string>(){
+                "int",
+                "char",
+                "bool",
+                "void",
+                "printf",
+                "#import",
+                "#include",
+                "puts",
+                "scanf"
+            };
+
+            //TODO: Engineer a good way to guess what the user was trying to type
+
+            File.Delete("Tokens.txt");
+        }
     }
 }
