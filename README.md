@@ -10,5 +10,5 @@ After creating this file, to compile it use the compiler application, an example
 To compile and run the file immediately after, switch the "-b" parameter for "-br"
 
 Currently a few requirements are needed to compile DawnLang files, so make sure you meet all of the following requirements:  
- -Linux Distribution or Windows Subsystem for Linux  
+ -Linux Distribution or Windows Subsystem for Linux (Or MinGW installed with a gcc environment variable)  
  -GCC C Compiler
