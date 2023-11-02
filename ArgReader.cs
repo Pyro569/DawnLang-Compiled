@@ -8,6 +8,8 @@ namespace DawnLangCompiler
         {
             for (int i = 0; i < args.Length; i++)
             {
+                if (args[0] == "-d")
+                    Tokenization.DebugMode = true;
                 if (args[i] == "-b")
                     Tokenization.BuildFile(args[i + 1], args[i + 2]);
                 if (args[i] == "-br")

@@ -17,6 +17,7 @@ namespace DawnLangCompiler
         private static List<string> IntListNames = new List<string>();      //list of int list names
         private static List<string> StringListNames = new List<string>();
         private static List<string> BoolListNames = new List<string>();
+        public static bool DebugMode = false;
         public static string ErrorOpCode = "a000";                         //random junk output for errors that actually has a meaning once you look at the source code
 
         public static void BuildFile(string FilePath, string OutputFileName)
@@ -28,12 +29,14 @@ namespace DawnLangCompiler
                 ConvertTokens();        //convert the code to C
                 Creation.CreateCFile("Main");          //write the C code into a file
                 Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
-                Creation.Cleanup("Main");              //cleanup all of the leftovers
+                if (!DebugMode)
+                    Creation.Cleanup("Main");              //cleanup all of the leftovers
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
                 ErrorCodeIO.ErrorCodeOutput();
-                Creation.Cleanup("Main");
+                if (!DebugMode)
+                    Creation.Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled
                     File.Delete(OutputFileName);
                 System.Environment.Exit(1);
