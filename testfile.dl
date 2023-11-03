@@ -2,8 +2,6 @@
 
 function main(){
     input.int();
-    line();
-
     int a = input.int.last();
     print.int(a);
 }

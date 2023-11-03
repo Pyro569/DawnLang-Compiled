@@ -106,6 +106,10 @@ namespace DawnLangCompiler
                             Tokens.Add(Lines[i][j] + "");
                         TokenString = "";
                     }
+
+                    for (int z = 0; z < Tokens.Count; z++)
+                        if (Tokens[z] == "")
+                            Tokens.Remove(Tokens[z]);
                 }
             }
 

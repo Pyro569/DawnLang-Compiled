@@ -1,1 +1,1 @@
-dotnet run "-br" "testfile.dl" "testing"
+dotnet run "-b" "testfile.dl" "testing" && ./testing
