@@ -8,5 +8,5 @@ function main(){
     TrueFalse = true;
 
     //to print if a boolean is true or false, print_int() should work, 0 = false, 1 = true
-    print_int(TrueFalse);
+    print.int(TrueFalse);
 }

@@ -2,7 +2,7 @@
 
 //initialize function named print_out with string parameter of ToPrint
 function print_out(string ToPrint){
-    print_str(ToPrint);
+    print.str(ToPrint);
 }
 
 function main(){

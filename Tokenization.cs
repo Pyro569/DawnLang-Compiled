@@ -114,6 +114,13 @@ namespace DawnLangCompiler
             //    System.Console.WriteLine(token);
         }
 
+        //remove tokens from the token list, method inputs list to remove multi-line clutter
+        public static void RemoveToken(List<int> index)
+        {
+            foreach (int indexNum in index)
+                Tokens.Remove(Tokens[indexNum]);
+        }
+
         private static void SearchForFunctions()
         {
             ErrorOpCode = "fs100"; //fs for function search, 100 for operation spot
@@ -137,7 +144,7 @@ namespace DawnLangCompiler
                     case "print":
                         ConvertedTokens.Add("printf(" + Tokens[i + 1] + ");");              //print("hello, world"); comes out to printf("hello, world");
                         break;
-                    case "print_str":
+                    case "print.str":
                         ConvertedTokens.Add("printf(\"%s\\n\"," + Tokens[i + 1] + ");");    //print_str(hello); comes out to printf("%s", hello);
                         break;
                     case "int":
@@ -152,7 +159,7 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("char " + Tokens[i + 1] + "[]" + Tokens[i + 2] + Tokens[i + 3] + ";");  //string hello = "hello world!"; comes out to char[] hello = "hello world!';
                         StringVars.Add(Tokens[i + 1]);
                         break;
-                    case "print_int":
+                    case "print.int":
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
@@ -178,8 +185,7 @@ namespace DawnLangCompiler
                                     if (Tokens[j + 2] != ")")                       //if the third token is not a left bracket, add a comma
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     IntVars.Add(Tokens[j + 1]);                     //add the int variable name to int vars list
-                                    Tokens.Remove(Tokens[j]);                       //remove tokens[j] and tokens[j+1]
-                                    Tokens.Remove(Tokens[j + 1]);
+                                    RemoveToken(new List<int> { j, j + 1 });
                                 }
                                 if (Tokens[j] == "string")
                                 {
@@ -187,8 +193,7 @@ namespace DawnLangCompiler
                                     if (Tokens[j + 2] != ")")
                                         ConvertedTokens[ConvertedTokens.Count - 1] += ",";
                                     StringVars.Add(Tokens[j + 1]);
-                                    Tokens.Remove(Tokens[j]);
-                                    Tokens.Remove(Tokens[j + 1]);
+                                    RemoveToken(new List<int> { j, j + 1 });
                                 }
                                 else if (Tokens[j] == "}")
                                     break;
@@ -259,7 +264,7 @@ namespace DawnLangCompiler
                                 break;
                             }
                         break;
-                    case "print_list_element":
+                    case "print.list.element":
                         if (IntListNames.Contains(Tokens[i + 1]))
                             ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
                         if (BoolListNames.Contains(Tokens[i + 1]))
@@ -288,26 +293,22 @@ namespace DawnLangCompiler
                                 else if (Tokens[n] == "int")
                                 {
                                     IntVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "char[]")
                                 {
                                     StringVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "bool")
                                 {
                                     BoolVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "void")
                                 {
                                     FunctionNames.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                             }
                         }
@@ -333,26 +334,22 @@ namespace DawnLangCompiler
                                 else if (Tokens[n] == "int")
                                 {
                                     IntVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "std::string" || Tokens[n] == "string")
                                 {
                                     StringVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "bool")
                                 {
                                     BoolVars.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                                 else if (Tokens[n] == "void")
                                 {
                                     FunctionNames.Add(Tokens[n + 1]);
-                                    Tokens.Remove(Tokens[n]);
-                                    Tokens.Remove(Tokens[n + 1]);
+                                    RemoveToken(new List<int> { n, n + 1 });
                                 }
                             }
                         }

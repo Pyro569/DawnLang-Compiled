@@ -4,5 +4,5 @@ function main(){
     //initialize variable called HelloWorld
     string HelloWorld = "Hello, World!\n";
     //print string HelloWorld
-    print_str(HelloWorld);
+    print.str(HelloWorld);
 }

@@ -1,7 +1,14 @@
 #import dawnlang.io;
 
 function main(){
+    List<int> intList = [0, 9, 7];
+    print.list.element(intList, 1);
+
     C-Code[
-        printf("Hello, World!\n");
+        intList[1] = 12;
+        int seventeen = 17;
     ]-End
+
+    print.int(seventeen);
+    print.list.element(intList, 1);
 }

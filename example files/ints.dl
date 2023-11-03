@@ -4,5 +4,5 @@ function main(){
     //intialize int variable named twelve with a value of 12
     int twelve = 12;
     //print said int 
-    print_int(12);
+    print.int(12);
 }

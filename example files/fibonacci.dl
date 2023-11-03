@@ -5,7 +5,7 @@ function main(){
     int b = 1;
     int c = 1;
     for (int i = 1; i < 32; i++){
-        print_int(a); 
+        print.int(a); 
         c = a; 
         a = b; 
         b += c;
