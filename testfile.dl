@@ -1,7 +1,7 @@
 #import dawnlang.io;
 
 function main(){
-    for(int i = 0; i < 3; i++){
-        print("Hello, World!\n");
-    }
+    C-Code[
+        printf("Hello, World!\n");
+    ]-End
 }
