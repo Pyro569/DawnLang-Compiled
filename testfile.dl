@@ -1,21 +1,9 @@
 #import dawnlang.io;
 
 function main(){
-    List<int> intList = [0, 9, 7];
-    print.list.element(intList, 1);
-
-    C-Code[
-        intList[1] = 12;
-        int seventeen = 17;
-    ]-End
-
-    print.int(seventeen);
-    print.list.element(intList, 1);
-
-    input.str();
-    input.str.last();
-    line();
     input.int();
-    input.int.last();
     line();
+
+    int a = input.int.last();
+    print.int(a);
 }

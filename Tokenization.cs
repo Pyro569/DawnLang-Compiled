@@ -148,7 +148,12 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%s\\n\"," + Tokens[i + 1] + ");");    //print_str(hello); comes out to printf("%s", hello);
                         break;
                     case "int":
-                        ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + ";");  //int a = 17;
+                        ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2]);  //int a = 17;
+                        if (Tokens[i + 3] == "input.int.last")
+                            ConvertedTokens[ConvertedTokens.Count - 1] += "intinput";
+                        else
+                            ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 3];
+                        ConvertedTokens[ConvertedTokens.Count - 1] += ";";
                         IntVars.Add(Tokens[i + 1]);
                         break;
                     case "bool":
@@ -367,10 +372,20 @@ namespace DawnLangCompiler
                         break;
                     default:
                         //change the value of an int variable
-                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int")
+                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 2] != "input.int.last")
                         {
                             if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                        }
+                        else if (IntVars.Contains(Tokens[i]) && Tokens[i + 2] == "input.int.last")
+                        {
+                            ConvertedTokens.Add(Tokens[i] + " = intinput;");
+                            RemoveToken(new List<int> { i, i + 1, i + 2 });
+                        }
+                        else if (StringVars.Contains(Tokens[i]) && Tokens[i + 2] == "input.str.last")
+                        {
+                            ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " strinput;");
+                            RemoveToken(new List<int> { i, i + 1, i + 2 });
                         }
                         else if (BoolVars.Contains(Tokens[i]) && Tokens[i - 1] != "bool")
                         {
