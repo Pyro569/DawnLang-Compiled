@@ -167,10 +167,6 @@ namespace DawnLangCompiler
                         for (int z = 0; z < 12; z++)
                             Tokens.Remove(Tokens[z]);
                         break;
-                    case "then":
-                        if (Tokens[i + 1] == "end")         //end a for loop with a };
-                            ConvertedTokens.Add("}");
-                        break;
                     case "function":
                         if (Tokens[i + 1] == "main")            //search for main function and add it
                             ConvertedTokens.Add("int main(){"); //add main function to the c file
