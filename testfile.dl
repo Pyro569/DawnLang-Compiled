@@ -11,4 +11,11 @@ function main(){
 
     print.int(seventeen);
     print.list.element(intList, 1);
+
+    input.str();
+    input.str.last();
+    line();
+    input.int();
+    input.int.last();
+    line();
 }

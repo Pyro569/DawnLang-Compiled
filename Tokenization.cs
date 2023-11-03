@@ -200,6 +200,21 @@ namespace DawnLangCompiler
                     case "if":
                         ConvertedTokens.Add("if(" + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + "){");
                         break;
+                    case "line":
+                        ConvertedTokens.Add("printf(\"\\n\");");
+                        break;
+                    case "input.str":
+                        ConvertedTokens.Add("char strinput[255];\nscanf(\"%s\", strinput);");
+                        break;
+                    case "input.int":
+                        ConvertedTokens.Add("int intinput;\nscanf(\"%d\", &intinput);");
+                        break;
+                    case "input.int.last":
+                        ConvertedTokens.Add("printf(\"%d\", intinput);");
+                        break;
+                    case "input.str.last":
+                        ConvertedTokens.Add("printf(\"%s\", strinput);");
+                        break;
                     case "else":
                         ConvertedTokens.Add("else");
                         if (Tokens[i + 1] != "if")
