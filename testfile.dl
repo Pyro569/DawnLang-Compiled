@@ -1,13 +1,6 @@
 #import dawnlang.io;
 
 function main(){
-    int a = 0;
-    int b = 1;
-    int c = 1;
-    for (int i = 1; i < 32; i++){
-        print.int(a); 
-        c = a; 
-        a = b; 
-        b += c;
-    }
+    List<int> intList = [0, 9, 7];
+    print.list.element(intList, 2);
 }

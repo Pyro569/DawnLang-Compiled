@@ -96,13 +96,15 @@ namespace DawnLangCompiler
                         TokenString += ",";
                     //if not semicolon space or parenthesis then add current char to string
                     else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',' && Lines[i][j] != '{'
-                     && Lines[i][j] != '}' && Lines[i][j] != '[' && Lines[i][j] != ']' && Lines[i][j] != '=')
+                     && Lines[i][j] != '}' && Lines[i][j] != '[' && Lines[i][j] != ']' && Lines[i][j] != '=' && Lines[i][j] != '+' && Lines[i][j] != '-'
+                     && Lines[i][j] != '<' && Lines[i][j] != '>')
                         TokenString += Lines[i][j];
                     else
                     //add the string to the tokens and set string to blank
                     {
                         Tokens.Add(TokenString);
-                        if (Lines[i][j] == ',' || Lines[i][j] == ')' || Lines[i][j] == '}' || Lines[i][j] == '[' || Lines[i][j] == ']' || Lines[i][j] == ';' || Lines[i][j] == '=')
+                        if (Lines[i][j] == ',' || Lines[i][j] == ')' || Lines[i][j] == '}' || Lines[i][j] == '[' || Lines[i][j] == ']' || Lines[i][j] == ';' ||
+                         Lines[i][j] == '=' || Lines[i][j] == '+' || Lines[i][j] == '-' || Lines[i][j] == '<' || Lines[i][j] == '>')
                             Tokens.Add(Lines[i][j] + "");
                         TokenString = "";
                     }
@@ -152,13 +154,16 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%s\\n\"," + Tokens[i + 1] + ");");    //print_str(hello); comes out to printf("%s", hello);
                         break;
                     case "int":
-                        ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2]);  //int a = 17;
-                        if (Tokens[i + 3] == "input.int.last")
-                            ConvertedTokens[ConvertedTokens.Count - 1] += "intinput";
-                        else
-                            ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 3];
-                        ConvertedTokens[ConvertedTokens.Count - 1] += ";";
-                        IntVars.Add(Tokens[i + 1]);
+                        if (Tokens[i + 1] != "<")
+                        {
+                            ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2]);  //int a = 17;
+                            if (Tokens[i + 3] == "input.int.last")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "intinput";
+                            else
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 3];
+                            ConvertedTokens[ConvertedTokens.Count - 1] += ";";
+                            IntVars.Add(Tokens[i + 1]);
+                        }
                         break;
                     case "bool":
                         ConvertedTokens.Add("bool " + Tokens[i + 1] + " = " + Tokens[i + 3] + ";");
@@ -172,8 +177,8 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
-                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 6] + Tokens[i + 7] + Tokens[i + 8] + "; " + Tokens[i + 10] + " ){");    //create a for loop
-                        for (int z = 0; z < 10; z++)
+                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 6] + Tokens[i + 7] + Tokens[i + 8] + "; " + Tokens[i + 10] + Tokens[i + 11] + Tokens[i + 12] + " ){");    //create a for loop
+                        for (int z = 0; z < 12; z++)
                             Tokens.Remove(Tokens[z]);
                         break;
                     case "function":
@@ -248,41 +253,55 @@ namespace DawnLangCompiler
                                 break;
                         }
                         break;
-                    case "List<int>":
-                        IntListNames.Add(Tokens[i + 1]);
-                        ConvertedTokens.Add("int " + Tokens[i + 1] + "[] = {");
-                        for (int z = i + 4; z < Tokens.Count; z++)
-                            if (Tokens[z] != "]")
-                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
-                            else
-                            {
-                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                    case "List":
+                        List<string> TokensToRemove = new List<string>();
+                        switch (Tokens[i + 2])
+                        {
+                            case "int":
+                                IntListNames.Add(Tokens[i + 4]);
+                                ConvertedTokens.Add("int " + Tokens[i + 4] + "[] = {");
+                                for (int z = i + 7; z < Tokens.Count; z++)
+                                    if (Tokens[z] != "]")
+                                    {
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                                        TokensToRemove.Add(Tokens[z]);
+                                    }
+                                    else
+                                    {
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                        TokensToRemove.Add(Tokens[z]);
+                                        break;
+                                    }
                                 break;
-                            }
-                        break;
-                    case "List<string>":
-                        StringListNames.Add(Tokens[i + 1]);
-                        ConvertedTokens.Add("char " + Tokens[i + 1] + "[][255] = {");
-                        for (int z = i + 4; z < Tokens.Count; z++)
-                            if (Tokens[z] != "]")
-                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
-                            else
-                            {
-                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                            case "string":
+                                StringListNames.Add(Tokens[i + 4]);
+                                ConvertedTokens.Add("char " + Tokens[i + 4] + "[][255] = {");
+                                for (int z = i + 7; z < Tokens.Count; z++)
+                                    if (Tokens[z] != "]")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                                    else
+                                    {
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                        TokensToRemove.Add(Tokens[z]);
+                                        break;
+                                    }
                                 break;
-                            }
-                        break;
-                    case "List<bool>":
-                        BoolListNames.Add(Tokens[i + 1]);
-                        ConvertedTokens.Add("bool " + Tokens[i + 1] + "[] = {");
-                        for (int z = i + 4; z < Tokens.Count; z++)
-                            if (Tokens[z] != "]")
-                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
-                            else
-                            {
-                                ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                            case "bool":
+                                BoolListNames.Add(Tokens[i + 4]);
+                                ConvertedTokens.Add("bool " + Tokens[i + 4] + "[] = {");
+                                for (int z = i + 7; z < Tokens.Count; z++)
+                                    if (Tokens[z] != "]")
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                                    else
+                                    {
+                                        ConvertedTokens[ConvertedTokens.Count - 1] += "};";
+                                        TokensToRemove.Add(Tokens[z]);
+                                        break;
+                                    }
                                 break;
-                            }
+                        }
+                        for (int l = 0; l < TokensToRemove.Count; l++)
+                            Tokens.Remove(Tokens[l]);
                         break;
                     case "print.list.element":
                         if (IntListNames.Contains(Tokens[i + 1]))
