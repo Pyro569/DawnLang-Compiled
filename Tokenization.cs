@@ -96,13 +96,13 @@ namespace DawnLangCompiler
                         TokenString += ",";
                     //if not semicolon space or parenthesis then add current char to string
                     else if (Lines[i][j] != ';' && Lines[i][j] != ' ' && Lines[i][j] != '(' && Lines[i][j] != ')' && Lines[i][j] != ',' && Lines[i][j] != '{'
-                     && Lines[i][j] != '}' && Lines[i][j] != '[' && Lines[i][j] != ']')
+                     && Lines[i][j] != '}' && Lines[i][j] != '[' && Lines[i][j] != ']' && Lines[i][j] != '=')
                         TokenString += Lines[i][j];
                     else
                     //add the string to the tokens and set string to blank
                     {
                         Tokens.Add(TokenString);
-                        if (Lines[i][j] == ',' || Lines[i][j] == ')' || Lines[i][j] == '}' || Lines[i][j] == '[' || Lines[i][j] == ']' || Lines[i][j] == ';')
+                        if (Lines[i][j] == ',' || Lines[i][j] == ')' || Lines[i][j] == '}' || Lines[i][j] == '[' || Lines[i][j] == ']' || Lines[i][j] == ';' || Lines[i][j] == '=')
                             Tokens.Add(Lines[i][j] + "");
                         TokenString = "";
                     }
@@ -172,8 +172,8 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
-                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 7] + Tokens[i + 8] + Tokens[i + 9] + "; " + Tokens[i + 12] + " ){");    //create a for loop
-                        for (int z = 0; z < 12; z++)
+                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 6] + Tokens[i + 7] + Tokens[i + 8] + "; " + Tokens[i + 10] + " ){");    //create a for loop
+                        for (int z = 0; z < 10; z++)
                             Tokens.Remove(Tokens[z]);
                         break;
                     case "function":
@@ -207,7 +207,7 @@ namespace DawnLangCompiler
                         }
                         break;
                     case "if":
-                        ConvertedTokens.Add("if(" + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + "){");
+                        ConvertedTokens.Add("if(" + Tokens[i + 1] + Tokens[i + 2] + Tokens[i + 3] + Tokens[i + 4] + "){");
                         break;
                     case "line":
                         ConvertedTokens.Add("printf(\"\\n\");");
@@ -251,7 +251,7 @@ namespace DawnLangCompiler
                     case "List<int>":
                         IntListNames.Add(Tokens[i + 1]);
                         ConvertedTokens.Add("int " + Tokens[i + 1] + "[] = {");
-                        for (int z = i + 5; z < Tokens.Count; z++)
+                        for (int z = i + 4; z < Tokens.Count; z++)
                             if (Tokens[z] != "]")
                                 ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
                             else
@@ -263,7 +263,7 @@ namespace DawnLangCompiler
                     case "List<string>":
                         StringListNames.Add(Tokens[i + 1]);
                         ConvertedTokens.Add("char " + Tokens[i + 1] + "[][255] = {");
-                        for (int z = i + 5; z < Tokens.Count; z++)
+                        for (int z = i + 4; z < Tokens.Count; z++)
                             if (Tokens[z] != "]")
                                 ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
                             else
@@ -275,7 +275,7 @@ namespace DawnLangCompiler
                     case "List<bool>":
                         BoolListNames.Add(Tokens[i + 1]);
                         ConvertedTokens.Add("bool " + Tokens[i + 1] + "[] = {");
-                        for (int z = i + 5; z < Tokens.Count; z++)
+                        for (int z = i + 4; z < Tokens.Count; z++)
                             if (Tokens[z] != "]")
                                 ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
                             else
@@ -286,11 +286,11 @@ namespace DawnLangCompiler
                         break;
                     case "print.list.element":
                         if (IntListNames.Contains(Tokens[i + 1]))
-                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 3] + "]);");
                         if (BoolListNames.Contains(Tokens[i + 1]))
-                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                            ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 3] + "]);");
                         if (StringListNames.Contains(Tokens[i + 1]))
-                            ConvertedTokens.Add("printf(\"%s\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 4] + "]);");
+                            ConvertedTokens.Add("printf(\"%s\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 3] + "]);");
                         break;
                     case "C-Code":
                         if (Tokens[i + 1] == "[")
@@ -376,10 +376,15 @@ namespace DawnLangCompiler
                         break;
                     default:
                         //change the value of an int variable
-                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 2] != "input.int.last")
+                        if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 1] == "=")
                         {
-                            if (Tokens[i + 1] == "=" || Tokens[i + 1] == "+=")
+                            if (Tokens[i + 2] != "=" && Tokens[i + 2] != "<" && Tokens[i + 2] != ">")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
+                        }
+                        else if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 1] == "+" && Tokens[i + 2] == "=")
+                        {
+                            if (Tokens[i + 3] != "=" && Tokens[i + 3] != "<" && Tokens[i + 3] != ">")
+                                ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + Tokens[i + 2] + " " + Tokens[i + 3] + ";");
                         }
                         else if (IntVars.Contains(Tokens[i]) && Tokens[i + 2] == "input.int.last")
                         {
