@@ -1,4 +1,6 @@
+#import dawnlang.io;
+
 function main(){
     //to create a comment, make an empty line with a // at the beginning
-    //this file should do nothing!
+    print("There is a comment before this!\n");
 }

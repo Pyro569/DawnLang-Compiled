@@ -1,22 +1,3 @@
-#import dawnlang.io;
-
 function main(){
-    int num = 12;
-    switch(num){
-        case 12:
-            print("Its 12!\n");
-            break;
-        case 13:
-            print("Its 13!\n");
-            break;
-    }
-    num = 13;
-    switch(num){
-        case 12:
-            print("Its 12!\n");
-            break;
-        case 13:
-            print("Its 13!\n");
-            break;
-    }
+    
 }
