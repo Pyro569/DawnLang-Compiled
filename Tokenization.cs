@@ -186,7 +186,11 @@ namespace DawnLangCompiler
                         {
                             ConvertedTokens.Add("int main(");
                             if (Tokens[i + 2] == "args")
+                            {
                                 ConvertedTokens[ConvertedTokens.Count - 1] += "int argc, char** argv";
+                                IntVars.Add("argc");
+                                StringListNames.Add("argv");
+                            }
                             ConvertedTokens[ConvertedTokens.Count - 1] += "){";
                         }
                         else
