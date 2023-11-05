@@ -1,4 +1,7 @@
 A list of what's been changed in the most recent push so that way people can easily update their code:  
+11/4/2023  
+-While Loops exist now (took long enough)
+
 11/3/2023  
 -Changed Backend Code to Enhance Compilation Performance  
 -Added whatever you call the += stuff

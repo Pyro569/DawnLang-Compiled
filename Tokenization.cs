@@ -242,6 +242,22 @@ namespace DawnLangCompiler
                     case "}":
                         ConvertedTokens.Add("}");
                         break;
+                    case "while":
+                        int stopPoint = 0;
+                        ConvertedTokens.Add("while(");
+                        for (int k = i + 1; k < Tokens.Count; k++)
+                            if (Tokens[k] != ")")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += ")";
+                                stopPoint = k;
+                                break;
+                            }
+                        ConvertedTokens[ConvertedTokens.Count - 1] += "{";
+                        for (int l = i + 1; l < stopPoint; l++)
+                            Tokens.Remove(Tokens[l]);
+                        break;
                     case "#include":
                         ReadFile(Tokens[i + 1]);
                         SearchForFunctions();
