@@ -2,6 +2,7 @@
 
 function main(){
     int num = 12;
+    
     switch(num){
         case 12:
             print("Its 12!\n");
@@ -10,7 +11,9 @@ function main(){
             print("Its 13!\n");
             break;
     }
+
     num = 13;
+
     switch(num){
         case 12:
             print("Its 12!\n");

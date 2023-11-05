@@ -332,6 +332,18 @@ namespace DawnLangCompiler
                         if (StringListNames.Contains(Tokens[i + 1]))
                             ConvertedTokens.Add("printf(\"%s\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 3] + "]);");
                         break;
+                    case "switch":
+                        if (IntVars.Contains(Tokens[i + 1]) || BoolVars.Contains(Tokens[i + 1]) || StringVars.Contains(Tokens[i + 1]))
+                            ConvertedTokens.Add("switch(" + Tokens[i + 1] + "){");
+                        RemoveToken(new List<int> { i, i + 1 });
+                        break;
+                    case "case":
+                        ConvertedTokens.Add("case " + Tokens[i + 1]);
+                        RemoveToken(new List<int> { i + 1 });
+                        break;
+                    case "break":
+                        ConvertedTokens.Add("break;");
+                        break;
                     case "C-Code":
                         if (Tokens[i + 1] == "[")
                         {
