@@ -1,22 +1,23 @@
 #import dawnlang.io;
+#import dawnlang.data.types;
 
 function main(){
-    int num = 12;
-    switch(num){
-        case 12:
-            print("Its 12!\n");
+    bool TrueFalse = false;
+    switch(TrueFalse){
+        case 0:
+            print("False!\n");
             break;
-        case 13:
-            print("Its 13!\n");
+        case 1:
+            print("True!\n");
             break;
     }
-    num = 13;
-    switch(num){
-        case 12:
-            print("Its 12!\n");
+    TrueFalse = true;
+    switch(TrueFalse){
+        case 0:
+            print("False!\n");
             break;
-        case 13:
-            print("Its 13!\n");
+        case 1:
+            print("True!\n");
             break;
     }
 }
