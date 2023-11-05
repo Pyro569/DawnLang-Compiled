@@ -4,6 +4,7 @@ namespace DawnLangCompiler
 {
     class ErrorCodeIO
     {
+        //TODO: Finish this up in the 1.1 release
         public static void ErrorCodeOutput()
         {
             switch (Tokenization.ErrorOpCode)
@@ -88,6 +89,7 @@ namespace DawnLangCompiler
             };
 
             //TODO: Engineer a good way to guess what the user was trying to type
+
 
             File.Delete("Tokens.txt");
         }
