@@ -272,6 +272,9 @@ namespace DawnLangCompiler
                             case "dawnlang.data.types":
                                 ConvertedTokens[ConvertedTokens.Count - 1] += "<stdbool.h>";
                                 break;
+                            case "dawnlang.io.args":
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "<string.h>";
+                                break;
                         }
                         break;
                     case "List":
