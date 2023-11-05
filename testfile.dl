@@ -1,23 +1,7 @@
 #import dawnlang.io;
-#import dawnlang.data.types;
 
 function main(){
-    bool TrueFalse = false;
-    switch(TrueFalse){
-        case 0:
-            print("False!\n");
-            break;
-        case 1:
-            print("True!\n");
-            break;
-    }
-    TrueFalse = true;
-    switch(TrueFalse){
-        case 0:
-            print("False!\n");
-            break;
-        case 1:
-            print("True!\n");
-            break;
+    for(int i = 1; i < 101; i++){
+        print.int(i);
     }
 }
