@@ -182,8 +182,13 @@ namespace DawnLangCompiler
                             Tokens.Remove(Tokens[z]);
                         break;
                     case "function":
-                        if (Tokens[i + 1] == "main")            //search for main function and add it
-                            ConvertedTokens.Add("int main(){"); //add main function to the c file
+                        if (Tokens[i + 1] == "main")
+                        {
+                            ConvertedTokens.Add("int main(");
+                            if (Tokens[i + 2] == "args")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "int argc, char** argv";
+                            ConvertedTokens[ConvertedTokens.Count - 1] += "){";
+                        }
                         else
                         {
                             ConvertedTokens.Add("void " + Tokens[i + 1] + "("); //function declaration with function name

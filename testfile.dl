@@ -1,6 +1,6 @@
 #import dawnlang.io;
 
-function main(){
+function main(args){
     List<int> intList = [0, 9, 7];
     print.list.element(intList, 2);
 }
