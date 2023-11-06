@@ -491,6 +491,7 @@ namespace DawnLangCompiler
                                 break;
                             }
                         }
+                        FloatVars.Add(Tokens[i + 1]);
                         break;
                     default:
                         //change the value of an int variable

@@ -1,9 +1,6 @@
 #import dawnlang.io;
 #import dawnlang.io.args;
 
-function main(args){
-   constant.int twelve = 12;
-   print.int(twelve);
-   float ninetysevenpointwo = 997.2000931;
-   print.float(ninetysevenpointwo);
+function main(){
+    print("Hello, World!\n");
 }
