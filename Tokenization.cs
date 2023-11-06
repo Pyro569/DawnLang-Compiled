@@ -177,8 +177,24 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
-                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; " + Tokens[i + 6] + Tokens[i + 7] + Tokens[i + 8] + "; " + Tokens[i + 10] + Tokens[i + 11] + Tokens[i + 12] + " ){");    //create a for loop
-                        for (int z = 0; z < 12; z++)
+                        ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; ");
+                        int stopZone = 0;
+                        for (int z = i + 6; z < Tokens.Count; z++)
+                        {
+                            if (Tokens[z] != ";")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
+                                stopZone = z;
+                                break;
+                            }
+                        }
+                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[stopZone + 1] + Tokens[stopZone + 2] + Tokens[stopZone + 3];
+                        if (Tokens[stopZone + 4] == "+" || Tokens[stopZone + 4] == "-")
+                            ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[stopZone + 4];
+                        ConvertedTokens[ConvertedTokens.Count - 1] += " ){";    //create a for loop
+                        for (int z = i; z < stopZone - i; z++)
                             Tokens.Remove(Tokens[z]);
                         break;
                     case "function":
