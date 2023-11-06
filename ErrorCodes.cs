@@ -111,7 +111,6 @@ namespace DawnLangCompiler
                     Console.WriteLine("Error appears to be regarding the " + Tokens[i] + " call");
             }
 
-
             File.Delete("Tokens.txt");
         }
     }
