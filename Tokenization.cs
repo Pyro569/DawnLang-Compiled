@@ -13,6 +13,7 @@ namespace DawnLangCompiler
         private static List<string> IntVars = new List<string>();           //names of integer variables stored in the program
         private static List<string> StringVars = new List<string>();        //names of string variables stored in the program
         private static List<string> BoolVars = new List<string>();          //names of boolean variables
+        private static List<string> ConstVars = new List<string>();
         private static List<string> FunctionNames = new List<string>();     //names of created functions
         private static List<string> IntListNames = new List<string>();      //list of int list names
         private static List<string> StringListNames = new List<string>();
@@ -442,6 +443,35 @@ namespace DawnLangCompiler
                                     FunctionNames.Add(Tokens[n + 1]);
                                     RemoveToken(new List<int> { n, n + 1 });
                                 }
+                            }
+                        }
+                        for (int k = i; k < Tokens.Count; k++)
+                            if (Tokens[k] == "]" && Tokens[k + 1] == "-" && Tokens[k + 2] == "End")
+                                break;
+                            else
+                                Tokens.Remove(Tokens[k]);
+                        break;
+                    case "return":
+                        ConvertedTokens.Add("return ");
+                        for (int k = i + 1; k < Tokens.Count; k++)
+                            if (Tokens[k] != ";")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                                break;
+                            }
+                        break;
+                    case "constant.int":
+                        ConvertedTokens.Add("const int ");
+                        for (int k = i + 1; k < Tokens.Count; k++)
+                        {
+                            if (Tokens[k] != ";")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                                break;
                             }
                         }
                         break;

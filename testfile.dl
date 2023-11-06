@@ -1,20 +1,7 @@
 #import dawnlang.io;
+#import dawnlang.io.args;
 
-function main(){
-    int i = 19;
-    while(i>12){
-        if(i == 19){
-            i=17;
-            print.int(i);
-        } else if(i==17){
-            i=15;
-            print.int(i);
-        } else if(i==15){
-            i=12;
-            print.int(i);
-        } else if(i==12){
-            i=11;
-            print.int(i);
-        }
-    }
+function main(args){
+   constant.int twelve = 12;
+   print.int(twelve);
 }

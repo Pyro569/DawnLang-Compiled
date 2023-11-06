@@ -1,6 +1,8 @@
 A list of what's been changed in the most recent push so that way people can easily update their code:  
 11/5/2023  
--Switch Cases Exist Now!
+-Switch Cases Exist Now!  
+-Return statement  
+-Constants (int constant at least)
 
 11/4/2023  
 -While Loops exist now (took long enough)
