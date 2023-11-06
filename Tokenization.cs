@@ -14,6 +14,7 @@ namespace DawnLangCompiler
         private static List<string> StringVars = new List<string>();        //names of string variables stored in the program
         private static List<string> BoolVars = new List<string>();          //names of boolean variables
         private static List<string> ConstVars = new List<string>();
+        private static List<string> FloatVars = new List<string>();
         private static List<string> FunctionNames = new List<string>();     //names of created functions
         private static List<string> IntListNames = new List<string>();      //list of int list names
         private static List<string> StringListNames = new List<string>();
@@ -176,6 +177,9 @@ namespace DawnLangCompiler
                         break;
                     case "print.int":
                         ConvertedTokens.Add("printf(\"%d\\n\"," + Tokens[i + 1] + ");");    //print_int(a); comes out to printf("%d\n",a);
+                        break;
+                    case "print.float":
+                        ConvertedTokens.Add("printf(\"%2.6f\\n\"," + Tokens[i + 1] + ");");    //print_float(a); comes out to printf("%d\n",a);
                         break;
                     case "for":
                         ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; ");
@@ -464,6 +468,19 @@ namespace DawnLangCompiler
                         break;
                     case "constant.int":
                         ConvertedTokens.Add("const int ");
+                        for (int k = i + 1; k < Tokens.Count; k++)
+                        {
+                            if (Tokens[k] != ";")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                            else
+                            {
+                                ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[k];
+                                break;
+                            }
+                        }
+                        break;
+                    case "float":
+                        ConvertedTokens.Add("float ");
                         for (int k = i + 1; k < Tokens.Count; k++)
                         {
                             if (Tokens[k] != ";")
