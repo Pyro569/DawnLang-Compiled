@@ -351,8 +351,8 @@ namespace DawnLangCompiler
                     case "break":
                         ConvertedTokens.Add("break;");
                         break;
-                    case "C-Code":
-                        if (Tokens[i + 1] == "[")
+                    case "C":
+                        if (Tokens[i + 1] == "-" && Tokens[i + 2] == "Code" && Tokens[i + 3] == "[")
                         {
                             for (int l = location; l < Lines.Count; l++)
                                 if (Lines[l].Contains("C-Code["))
@@ -367,7 +367,7 @@ namespace DawnLangCompiler
                                     break;
                             for (int n = i; n < Tokens.Count; n++)
                             {
-                                if (Tokens[n] == "]-End")
+                                if (Tokens[n] == "]" && Tokens[n + 1] == "-" && Tokens[n + 2] == "End")
                                     break;
                                 else if (Tokens[n] == "int")
                                 {
@@ -391,9 +391,7 @@ namespace DawnLangCompiler
                                 }
                             }
                         }
-                        break;
-                    case "C++-Code":
-                        if (Tokens[i + 1] == "[")
+                        else if (Tokens[i + 1] == "+" && Tokens[i + 2] == "+" && Tokens[i + 3] == "-" && Tokens[i + 4] == "Code" && Tokens[i + 5] == "[")
                         {
                             for (int l = location; l < Lines.Count; l++)
                                 if (Lines[l].Contains("C++-Code["))
@@ -408,7 +406,7 @@ namespace DawnLangCompiler
                                     break;
                             for (int n = i; n < Tokens.Count; n++)
                             {
-                                if (Tokens[n] == "]-End")
+                                if (Tokens[n] == "]" && Tokens[n + 1] == "-" && Tokens[n + 2] == "End")
                                     break;
                                 else if (Tokens[n] == "int")
                                 {

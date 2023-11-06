@@ -1,3 +1,11 @@
+#import dawnlang.io;
+
 function main(){
-    
+    C-Code[
+        int integer = 12;
+        printf("Value of integer is: %d\n", integer);
+    ]-End
+    integer = 27;
+    print("Value of integer is: ");
+    print.int(integer);
 }
