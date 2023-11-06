@@ -180,7 +180,6 @@ namespace DawnLangCompiler
                         ConvertedTokens.Add("for(int " + Tokens[i + 2] + " = " + Tokens[i + 4] + "; ");
                         int stopZone = 0;
                         for (int z = i + 6; z < Tokens.Count; z++)
-                        {
                             if (Tokens[z] != ";")
                                 ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[z];
                             else
@@ -189,7 +188,6 @@ namespace DawnLangCompiler
                                 stopZone = z;
                                 break;
                             }
-                        }
                         ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[stopZone + 1] + Tokens[stopZone + 2] + Tokens[stopZone + 3];
                         if (Tokens[stopZone + 4] == "+" || Tokens[stopZone + 4] == "-")
                             ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[stopZone + 4];
