@@ -85,40 +85,30 @@ namespace DawnLangCompiler
                 "#import",
                 "#include",
                 "puts",
-                "scanf"
+                "scanf",
+                "}",
+                "int main(){",
             };
 
             //TODO: Engineer a good way to guess what the user was trying to type
             List<string> variableNames = new List<string>();
 
-            for (int i = 0; i < Tokens.Count; i++)
+            for (int i = 1; i < Tokens.Count; i++)
             {
                 bool foundKeyword = false;
                 for (int k = 0; k < CKeywords.Count; k++)
-                {
                     if (Tokens[i] == CKeywords[k])
-                    {
                         foundKeyword = true;
-                    }
                     else
                     {
                         if (Tokens[i - 1] == "int" || Tokens[i - 1] == "char" || Tokens[i - 1] == "bool")
-                        {
                             variableNames.Add(Tokens[i]);
-                        }
                         for (int z = 0; z < variableNames.Count; z++)
-                        {
                             if (Tokens[i] == variableNames[z])
-                            {
                                 foundKeyword = true;
-                            }
-                        }
                     }
-                    if (foundKeyword == false)
-                    {
-                        Console.WriteLine("Error appears to be regarding the " + Tokens[i] + " call");
-                    }
-                }
+                if (foundKeyword == false)
+                    Console.WriteLine("Error appears to be regarding the " + Tokens[i] + " call");
             }
 
 

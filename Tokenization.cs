@@ -493,7 +493,7 @@ namespace DawnLangCompiler
         {
             using (StreamWriter streamWriter = new StreamWriter("Tokens.txt"))
                 for (int i = 0; i < ConvertedTokens.Count; i++)
-                    streamWriter.Write(ConvertedTokens[i] + " ");
+                    streamWriter.Write(ConvertedTokens[i] + "\n");
         }
     }
 }
