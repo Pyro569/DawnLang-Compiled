@@ -36,7 +36,7 @@ namespace DawnLangCompiler
             }
             catch
             {   //print out the error code and do some cleanup if there is an error
-                ErrorCodeIO.ErrorCodeOutput();
+                //ErrorCodeIO.ErrorCodeOutput();
                 if (!DebugMode)
                     Creation.Cleanup("Main");
                 if (File.Exists(OutputFileName))    //remove the probably fucked binary if it exists and compiled

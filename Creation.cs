@@ -26,7 +26,7 @@ namespace DawnLangCompiler
             Tokenization.ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
 
             Process.Start("gcc", FileName + ".cpp -w -lstdc++");  //-lstdc++ every time in case if c++ code sections are included
-            Thread.Sleep(225);                   //small micro sleep for program to not error moving file since it is so new
+            Thread.Sleep(1500);                   //small micro sleep for program to not error moving file since it is so new
             File.Move("./a.out", "./" + OutputFileName);
         }
 

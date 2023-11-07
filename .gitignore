@@ -2,6 +2,8 @@ bin/
 obj/
 DawnLang-Compiled.sln
 testing
+project-scripts/
 testrun.sh
 testrundebug.sh
+build.sh
 Main.cpp
