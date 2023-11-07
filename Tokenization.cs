@@ -197,7 +197,7 @@ namespace DawnLangCompiler
                         if (Tokens[stopZone + 4] == "+" || Tokens[stopZone + 4] == "-")
                             ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[stopZone + 4];
                         ConvertedTokens[ConvertedTokens.Count - 1] += " ){";    //create a for loop
-                        for (int z = i; z < stopZone - i; z++)
+                        for (int z = i; z < stopZone; z++)
                             Tokens.Remove(Tokens[z]);
                         break;
                     case "function":
