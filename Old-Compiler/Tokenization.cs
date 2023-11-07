@@ -29,6 +29,8 @@ namespace DawnLangCompiler
                 ReadFile(FilePath);     //get the tokens of the file
                 SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
                 ConvertTokens();        //convert the code to C
+                foreach (string token in ConvertedTokens)
+                    Console.WriteLine(token);
                 Creation.CreateCFile("Main");          //write the C code into a file
                 Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
                 if (!DebugMode)
@@ -347,8 +349,6 @@ namespace DawnLangCompiler
                                     }
                                 break;
                         }
-                        for (int l = 0; l < TokensToRemove.Count; l++)
-                            Tokens.Remove(Tokens[l]);
                         break;
                     case "print.list.element":
                         if (IntListNames.Contains(Tokens[i + 1]))
@@ -409,6 +409,11 @@ namespace DawnLangCompiler
                                     RemoveToken(new List<int> { n, n + 1 });
                                 }
                             }
+                            for (int k = i; k < Tokens.Count; k++)
+                                if (Tokens[k] == "]" && Tokens[k + 1] == "-" && Tokens[k + 2] == "End")
+                                    break;
+                                else
+                                    Tokens.Remove(Tokens[k]);
                         }
                         else if (Tokens[i + 1] == "+" && Tokens[i + 2] == "+" && Tokens[i + 3] == "-" && Tokens[i + 4] == "Code" && Tokens[i + 5] == "[")
                         {
@@ -448,12 +453,14 @@ namespace DawnLangCompiler
                                     RemoveToken(new List<int> { n, n + 1 });
                                 }
                             }
+                            for (int k = i; k < Tokens.Count; k++)
+                                if (Tokens[k] == "]" && Tokens[k + 1] == "-" && Tokens[k + 2] == "End")
+                                    break;
+                                else
+                                    Tokens.Remove(Tokens[k]);
                         }
-                        for (int k = i; k < Tokens.Count; k++)
-                            if (Tokens[k] == "]" && Tokens[k + 1] == "-" && Tokens[k + 2] == "End")
-                                break;
-                            else
-                                Tokens.Remove(Tokens[k]);
+                        foreach (string token in Tokens)
+                            Console.WriteLine(token);
                         break;
                     case "return":
                         ConvertedTokens.Add("return ");
