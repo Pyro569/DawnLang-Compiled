@@ -1,0 +1,12 @@
+#import dawnlang.io;
+#import dawnlang.io.args;
+
+function main(args){
+    C-Code[
+        for(int i = 1; i < argc; i++){
+            if(0 == strcmp(argv[i], "-b")){
+                printf("Build File!\n");
+            }
+        }
+    ]-End
+}
