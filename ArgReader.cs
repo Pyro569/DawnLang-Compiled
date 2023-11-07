@@ -28,7 +28,7 @@ namespace DawnLangCompiler
                 }
                 if (args[i] == "--version")
                     //TODO: Change this to DawnLang Version 1.0 for the full release
-                    Console.WriteLine("DawnLang Version 1.0rc");
+                    Console.WriteLine("DawnLang Version 1.0");
                 if (args[i] == "--h")
                     for (int l = 0; l < PossibleArgs.Count; l++)
                         Console.WriteLine(PossibleArgs[l]);
