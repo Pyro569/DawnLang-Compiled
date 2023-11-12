@@ -161,6 +161,8 @@ namespace DawnLangCompiler
                             ConvertedTokens.Add("int " + Tokens[i + 1] + Tokens[i + 2]);  //int a = 17;
                             if (Tokens[i + 3] == "input.int.last")
                                 ConvertedTokens[ConvertedTokens.Count - 1] += "intinput";
+                            if (Tokens[i + 3] == "list.size")
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "arraySize";
                             else
                                 ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 3];
                             ConvertedTokens[ConvertedTokens.Count - 1] += ";";
@@ -350,6 +352,19 @@ namespace DawnLangCompiler
                         for (int l = 0; l < TokensToRemove.Count; l++)
                             Tokens.Remove(Tokens[l]);
                         break;
+                    case "list.size":
+                        if (!ConvertedTokens.Contains("int arraySize"))
+                            ConvertedTokens.Add("int");
+                        ConvertedTokens[ConvertedTokens.Count - 1] += " arraySize = sizeof(";
+                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 1] + ")/4;";
+                        break;
+                    case "list.element.add":
+                        if (!ConvertedTokens.Contains("int arraySize"))
+                            ConvertedTokens.Add("int");
+                        ConvertedTokens[ConvertedTokens.Count - 1] += " arraySize = sizeof(";
+                        ConvertedTokens[ConvertedTokens.Count - 1] += Tokens[i + 1] + ")/4;";
+                        ConvertedTokens.Add(Tokens[i + 1] + "[arraySize] = " + Tokens[i + 3] + ";");
+                        break;
                     case "print.list.element":
                         if (IntListNames.Contains(Tokens[i + 1]))
                             ConvertedTokens.Add("printf(\"%d\\n\", " + Tokens[i + 1] + "[" + Tokens[i + 3] + "]);");
@@ -497,7 +512,7 @@ namespace DawnLangCompiler
                         //change the value of an int variable
                         if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 1] == "=")
                         {
-                            if (Tokens[i + 2] != "=" && Tokens[i + 2] != "<" && Tokens[i + 2] != ">")
+                            if (Tokens[i + 2] != "=" && Tokens[i + 2] != "<" && Tokens[i + 2] != ">" && Tokens[i + 2] != "list.size")
                                 ConvertedTokens.Add(Tokens[i] + " " + Tokens[i + 1] + " " + Tokens[i + 2] + ";");
                         }
                         else if (IntVars.Contains(Tokens[i]) && Tokens[i - 1] != "int" && Tokens[i + 1] == "+" && Tokens[i + 2] == "=")
@@ -508,6 +523,15 @@ namespace DawnLangCompiler
                         else if (IntVars.Contains(Tokens[i]) && Tokens[i + 2] == "input.int.last")
                         {
                             ConvertedTokens.Add(Tokens[i] + " = intinput;");
+                            RemoveToken(new List<int> { i, i + 1, i + 2 });
+                        }
+                        else if (IntVars.Contains(Tokens[i]) && Tokens[i + 2] == "list.size")
+                        {
+                            if (!ConvertedTokens.Contains("int arraySize"))
+                                ConvertedTokens.Insert(ConvertedTokens.Count - 1, "int");
+                            ConvertedTokens[ConvertedTokens.Count - 2] += " arraySize = sizeof(";
+                            ConvertedTokens[ConvertedTokens.Count - 2] += Tokens[i + 3] + ")/4;";
+                            ConvertedTokens.Add(Tokens[i] + " = arraySize;");
                             RemoveToken(new List<int> { i, i + 1, i + 2 });
                         }
                         else if (StringVars.Contains(Tokens[i]) && Tokens[i + 2] == "input.str.last")
