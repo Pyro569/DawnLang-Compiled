@@ -453,7 +453,7 @@ namespace DawnLangCompiler
                             if (Tokens[k] == "]" && Tokens[k + 1] == "-" && Tokens[k + 2] == "End")
                                 break;
                             else
-                                Tokens.Remove(Tokens[k]);
+                                RemoveToken(new List<int> { k });
                         break;
                     case "return":
                         ConvertedTokens.Add("return ");

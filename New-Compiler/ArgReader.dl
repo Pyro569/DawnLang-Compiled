@@ -3,29 +3,19 @@
 
 function main(args){
     C-Code[
-        if(argc > 1){
-            for(int i = 1; i < argc; i++){
+        for(int i = 1; i < argc; i++){
             if(0 == strcmp(argv[i], "-b")){
                 printf("Build File\n");
             }
             if(0 == strcmp(argv[i], "-br")){
                 printf("Build and Run File\n");
             }
-            if(0 == strcmp(argv[2], "-d")){
+            if(0 == strcmp(argv[i], "-d")){
                 printf("Development Debug Mode\n");
             }
-            if(0 == strcmp(argv[i], "--version")){
+            if(0 == strcmp(argv[i], "-version")){
                 printf("DawnLang Version 1.1.0\n");
             }
-            if(0 == strcmp(argv[i], "--h")){
-                printf("-d - Debug Mode (For development use only)\n");
-                printf("-b - Build File (input file name as next arg)\n");
-                printf("-br - Build and Run File (Compiles and then runs the compiled binary)\n");
-                printf("--version - Outputs the DawnLang version you have installed\n");
-                printf("--h - Prints out a list of possible arguments for the compiler\n");
-                printf("Example Compiler Usage: ./DawnLang \"-b\" \"hello_world.dl\" \"Hello_World\"\n");
-            }
-        }
         }
     ]-End
 }

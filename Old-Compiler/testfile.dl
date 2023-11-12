@@ -1,13 +1,21 @@
 #import dawnlang.io;
+#import dawnlang.io.args;
 
-function main(){
-    int a = 0;
-    int b = 1;
-    int c = 1;
-    for (int i = 1; i < 32; i++){
-        print.int(a); 
-        c = a; 
-        a = b; 
-        b += c;
-    }
+function main(args){
+    C-Code[
+        for(int i = 1; i < argc; i++){
+            if(0 == strcmp(argv[i], "-b")){
+                printf("Build File\n");
+            }
+            if(0 == strcmp(argv[i], "-br")){
+                printf("Build and Run File\n");
+            }
+            if(0 == strcmp(argv[i], "-d")){
+                printf("Development Debug Mode\n");
+            }
+            if(0 == strcmp(argv[i], "-version")){
+                printf("DawnLang Version 1.1.0\n");
+            }
+        }
+    ]-End
 }

@@ -1,5 +1,0 @@
-#import dawnlang.io;
-
-function main(){
-    print("Hello, World!\n");
-}
