@@ -1,7 +1,7 @@
-#import dawnlang.io;
+#include print_number_function.dl;
 
-function main(args){
-    List<int> intList = [12, 9, 7, 18];
-    list.element.add(intList, 47);
-    print.list.element(intList, 4);
+function main(){
+    int twelve = 12;
+    //call the print_number function from the print_number_function.dl file
+    print_number(twelve);
 }

@@ -1,7 +1,6 @@
+#include Tokenization.dl;
 #import dawnlang.io;
 #import dawnlang.io.args;
-
-#include Tokenization.dl;
 
 function main(args){
     C-Code[

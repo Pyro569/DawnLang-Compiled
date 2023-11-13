@@ -292,7 +292,7 @@ namespace DawnLangCompiler
                         switch (Tokens[i + 1])
                         {
                             case "dawnlang.io":
-                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdio.h>\n#include <iostream>";
+                                ConvertedTokens[ConvertedTokens.Count - 1] += "<stdio.h>";
                                 break;
                             case "dawnlang.data.types":
                                 ConvertedTokens[ConvertedTokens.Count - 1] += "<stdbool.h>";

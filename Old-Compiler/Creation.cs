@@ -8,7 +8,7 @@ namespace DawnLangCompiler
         {
             Tokenization.ErrorOpCode = "wc100";       //wc for writing c, 100 for first potential error spot
 
-            StreamWriter outputFile = new StreamWriter(FileName + ".cpp");
+            StreamWriter outputFile = new StreamWriter(FileName + ".c");
 
             //write each converted token to the c file
             foreach (string codeLines in Tokenization.ConvertedTokens)
@@ -25,7 +25,7 @@ namespace DawnLangCompiler
 
             Tokenization.ErrorOpCode = "cf200";              //cf for compile file, 200 for second potential error spot
 
-            Process.Start("gcc", FileName + ".cpp -w -lstdc++");  //-lstdc++ every time in case if c++ code sections are included
+            Process.Start("gcc", FileName + ".c -w -lstdc++");  //-lstdc++ every time in case if c++ code sections are included
             Thread.Sleep(1500);                   //small micro sleep for program to not error moving file since it is so new
             File.Move("./a.out", "./" + OutputFileName);
         }
@@ -34,8 +34,8 @@ namespace DawnLangCompiler
         {
             Tokenization.ErrorOpCode = "cl100";              //cl for cleanup, 100 for first potential error spot
 
-            if (File.Exists("./" + FileName + ".cpp"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
-                File.Delete("./" + FileName + ".cpp");
+            if (File.Exists("./" + FileName + ".c"))    //delete the TempFile.c if it still exists (which it still should, if not, error)
+                File.Delete("./" + FileName + ".c");
             else
                 System.Environment.Exit(1);
         }

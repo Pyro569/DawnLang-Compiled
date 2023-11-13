@@ -1,5 +1,0 @@
-#import dawnlang.io;
-
-function ReadFile(string FilePath){
-    
-}
