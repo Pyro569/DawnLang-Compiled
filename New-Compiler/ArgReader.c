@@ -1,13 +1,15 @@
 #include <stdio.h>
+#include <string.h>
 
-#include "Tokenization.c"
+#include "Creation.c"
 
 int main(int argc, char **argv)
 {
     for (int i = 1; i < argc; i++)
     {
         if (0 == strcmp(argv[i], "-b"))
-            BuildFile(argv[i + 1]);
+            if (argc >= 3)
+                BuildFile(argv[i + 1]);
         if (0 == strcmp(argv[i], "-br"))
             printf("Build and Run File\n");
         if (0 == strcmp(argv[i], "-d"))
