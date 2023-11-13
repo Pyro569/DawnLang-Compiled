@@ -7,3 +7,4 @@ testrun.sh
 testrundebug.sh
 build.sh
 Main.cpp
+Main.c
