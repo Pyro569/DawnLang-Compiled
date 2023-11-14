@@ -29,6 +29,19 @@ namespace DawnLangCompiler
                 ReadFile(FilePath);     //get the tokens of the file
                 SearchForFunctions();   //search for functions initialized in file and add to FunctionNames list
                 ConvertTokens();        //convert the code to C
+
+                for (int k = 0; k < ConvertedTokens.Count; k++)
+                {
+                    if (ConvertedTokens[k].Contains("for"))
+                    {
+                        if (ConvertedTokens[k].EndsWith(";"))
+                        {
+                            int length = ConvertedTokens[k].Length;
+                            ConvertedTokens[k] = ConvertedTokens[k].Replace(");", ")");
+                        }
+                    }
+                }
+
                 Creation.CreateCFile("Main");          //write the C code into a file
                 Creation.CompileCFile("Main", OutputFileName);   //compile the C file hopefully
                 if (!DebugMode)
@@ -423,6 +436,7 @@ namespace DawnLangCompiler
                                     FunctionNames.Add(Tokens[n + 1]);
                                     RemoveToken(new List<int> { n, n + 1 });
                                 }
+                                RemoveToken(new List<int> { n, n + 1, n + 2 });
                             }
                         }
                         else if (Tokens[i + 1] == "+" && Tokens[i + 2] == "+" && Tokens[i + 3] == "-" && Tokens[i + 4] == "Code" && Tokens[i + 5] == "[")
@@ -462,6 +476,7 @@ namespace DawnLangCompiler
                                     FunctionNames.Add(Tokens[n + 1]);
                                     RemoveToken(new List<int> { n, n + 1 });
                                 }
+                                RemoveToken(new List<int> { n, n + 1, n + 2 });
                             }
                         }
                         for (int k = i; k < Tokens.Count; k++)

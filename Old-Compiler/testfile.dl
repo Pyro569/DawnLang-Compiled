@@ -1,7 +1,22 @@
-#include print_number_function.dl;
+#import dawnlang.io.args;
+#import dawnlang.io;
 
-function main(){
-    int twelve = 12;
-    //call the print_number function from the print_number_function.dl file
-    print_number(twelve);
+function main(args){
+    C-Code[
+        for (int i = 1; i < argc; i++)
+        {
+            if (0 == strcmp(argv[i], "-b"))
+            {
+                printf("Build File!\n");
+            }
+            if (0 == strcmp(argv[i], "-br"))
+            {
+                printf("Build and Run File\n");
+            }
+            if (0 == strcmp(argv[i], "-d"))
+            {
+                printf("Development Debug Mode\n");
+            }
+        }
+    ]-End
 }
