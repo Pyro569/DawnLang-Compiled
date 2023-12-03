@@ -2,21 +2,5 @@
 #import dawnlang.io;
 
 function main(args){
-    C-Code[
-        for (int i = 1; i < argc; i++)
-        {
-            if (0 == strcmp(argv[i], "-b"))
-            {
-                printf("Build File!\n");
-            }
-            if (0 == strcmp(argv[i], "-br"))
-            {
-                printf("Build and Run File\n");
-            }
-            if (0 == strcmp(argv[i], "-d"))
-            {
-                printf("Development Debug Mode\n");
-            }
-        }
-    ]-End
+    print("Hello, World!\n");
 }

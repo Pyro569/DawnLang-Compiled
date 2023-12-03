@@ -154,12 +154,26 @@ namespace DawnLangCompiler
 
         private static void ConvertTokens()
         {
+            int argsTokenPoint = 0;
+            bool foundArgsTokenPoint = false;
             int location = 0;
             //convert tokens to c code
             ErrorOpCode = "c100";       //c for conversion, 100 for first potential error spot
 
             for (int i = 0; i < Tokens.Count; i++)
             {
+                if (!foundArgsTokenPoint)
+                {
+                    for (int l = 0; l < ConvertedTokens.Count; l++)
+                    {
+                        if (ConvertedTokens[l] == "int main(int argc, char** argv){")
+                        {
+                            argsTokenPoint = l - 1;
+                            foundArgsTokenPoint = true;
+                            break;
+                        }
+                    }
+                }
                 switch (Tokens[i])
                 {
                     case "print":
@@ -409,7 +423,7 @@ namespace DawnLangCompiler
                                 }
                             for (int b = location + 1; b < Lines.Count; b++)
                                 if (!Lines[b].Contains("]-End"))
-                                    ConvertedTokens.Add(Lines[b]);
+                                    ConvertedTokens.Insert(argsTokenPoint, Lines[b]);
                                 else
                                     break;
                             for (int n = i; n < Tokens.Count; n++)
@@ -449,7 +463,7 @@ namespace DawnLangCompiler
                                 }
                             for (int b = location + 1; b < Lines.Count; b++)
                                 if (!Lines[b].Contains("]-End"))
-                                    ConvertedTokens.Add(Lines[b]);
+                                    ConvertedTokens.Insert(argsTokenPoint, Lines[b]);
                                 else
                                     break;
                             for (int n = i; n < Tokens.Count; n++)

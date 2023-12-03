@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Tokenization.c"
-
-void BuildFile(char FilePath[])
+void BuildFile(char FilePath[], char BinaryPath[])
 {
     // check if the input file exists/can be found/has rw permissions, if not, exit with code 0
     FILE *file = fopen(FilePath, "r");
@@ -18,7 +16,7 @@ void BuildFile(char FilePath[])
                 if (FilePath[i] == '.' && FilePath[i + 1] == 'd' && FilePath[i + 2] == 'l')
                 {
                     // continue
-                    ReadFile(FilePath);
+                    ReadFile(FilePath, BinaryPath);
                 }
                 else
                 {
@@ -28,7 +26,7 @@ void BuildFile(char FilePath[])
             }
     else
     {
-        printf("ERROR: Failed to find file!\n");
+        printf("ERROR: Failed to access file!\n");
         printf("Reasons for this error can include:\n");
         printf("-File does not exist\n-Program does not have permissions to read file\n-Incorrect file path\n");
         exit(1);
