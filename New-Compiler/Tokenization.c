@@ -26,7 +26,7 @@ void TokenizeFile(char BinaryPath[])
         hasNonEmptyChar = 0; // Reset flag for each line
         for (int j = 0; j < strlen(fileContents[i]); j++)
         {
-            if (fileContents[i][j] == ';' || fileContents[i][j] == '{' || fileContents[i][j] == '}' || fileContents[i][j] == '(' || fileContents[i][j] == ')' || fileContents[i][j] == '"' || fileContents[i][j] == '=' || fileContents[i][j] == '+' || fileContents[i][j] == '-' || fileContents[i][j] == '<' || fileContents[i][j] == '>' || fileContents[i][j] == ' ')
+            if (fileContents[i][j] == ';' || fileContents[i][j] == '{' || fileContents[i][j] == '}' || fileContents[i][j] == '(' || fileContents[i][j] == ')' || fileContents[i][j] == '"' || fileContents[i][j] == '=' || fileContents[i][j] == '+' || fileContents[i][j] == '-' || fileContents[i][j] == '<' || fileContents[i][j] == '>' || fileContents[i][j] == ' ' || fileContents[i][j] == '[' || fileContents[i][j] == ']')
             {
                 if (tokenIndex > 0)
                 {
@@ -141,7 +141,6 @@ void Compile(char BinaryPath[])
             if (0 == strcmp(Tokens[i + 2], "\""))
             {
                 for (int z = i + 3; z < sizeof(Tokens) / sizeof(Tokens[0]); z++)
-                {
                     if (0 == strcmp(Tokens[z], "\""))
                     {
                         addConvertedToken("\"", convertedTokenLocation);
@@ -152,10 +151,12 @@ void Compile(char BinaryPath[])
                     {
                         addConvertedToken(Tokens[z], convertedTokenLocation);
                         convertedTokenLocation += 1;
-                        addConvertedToken(" ", convertedTokenLocation);
-                        convertedTokenLocation += 1;
+                        if (0 != strcmp(Tokens[z + 1], "\""))
+                        {
+                            addConvertedToken(" ", convertedTokenLocation);
+                            convertedTokenLocation += 1;
+                        }
                     }
-                }
                 addConvertedToken(");", convertedTokenLocation);
                 convertedTokenLocation += 1;
             }
@@ -169,19 +170,34 @@ void Compile(char BinaryPath[])
                 addConvertedToken("<stdio.h>\n", convertedTokenLocation);
                 convertedTokenLocation += 1;
             }
+            else if (0 == strcmp(Tokens[i + 1], "dawnlang.io.args"))
+            {
+                addConvertedToken("<string.h>\n", convertedTokenLocation);
+                convertedTokenLocation += 1;
+            }
         }
+        else if (0 == strcmp(Tokens[i], "C"))
+            if (0 == strcmp(Tokens[i + 1], "["))
+                for (int z = i + 2; z < sizeof(Tokens) / sizeof(Tokens[0]); z++)
+                    if (0 != strcmp(Tokens[z + 1], "-") && 0 != strcmp(Tokens[z + 2], "End"))
+                    {
+                        addConvertedToken(Tokens[z], convertedTokenLocation);
+                        convertedTokenLocation += 1;
+                    }
+                    else
+                        break;
     }
 
     FILE *fptr = fopen("Main.cpp", "w");
     for (int i = 0; i < sizeof(convertedTokens) / sizeof(convertedTokens[0]); i++)
-    {
         fprintf(fptr, convertedTokens[i]);
-    }
     fclose(fptr);
 
     system("gcc Main.cpp -w -lstdc++");
+
     char command[] = "mv a.out ";
     strcat(command, BinaryPath);
     system(command);
+
     exit(1);
 }
