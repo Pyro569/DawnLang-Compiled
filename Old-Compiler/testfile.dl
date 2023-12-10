@@ -2,5 +2,16 @@
 #import dawnlang.io;
 
 function main(args){
-    print("Hello, World!\n");
+    input.int();
+    int input;
+    //input = input.int();
+    
+    switch(input){
+        case 1:
+            print.int(input);
+            break;
+        case 2:
+            print.int(input);
+            break;
+    }
 }

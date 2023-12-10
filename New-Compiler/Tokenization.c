@@ -13,6 +13,11 @@ char currentToken[MAX_LENGTH] = {};
 char Tokens[MAX_LINES][MAX_LENGTH] = {};
 char convertedTokens[MAX_LINES][MAX_LENGTH] = {};
 
+char Ints[500] = {};
+int IntsDeclared = 0;
+char Strings[500][255] = {};
+int StringsDeclared = 0;
+
 int tokenSpot = 0;
 
 void TokenizeFile(char BinaryPath[])
@@ -39,7 +44,7 @@ void TokenizeFile(char BinaryPath[])
                 if (fileContents[i][j] != ' ')
                 { // Include spaces as separate tokens
                     currentToken[0] = fileContents[i][j];
-                    currentToken[1] = '\0'; // Null-terminate the currentToken
+                    // currentToken[1] = '\0'; // Null-terminate the currentToken
                     strncpy(Tokens[tokenSpot], currentToken, sizeof(currentToken));
                     tokenSpot++;
                 }
@@ -170,22 +175,60 @@ void Compile(char BinaryPath[])
                 addConvertedToken("<stdio.h>\n", convertedTokenLocation);
                 convertedTokenLocation += 1;
             }
-            else if (0 == strcmp(Tokens[i + 1], "dawnlang.io.args"))
+            else if (0 == strcmp(Tokens[i + 1], "dawnlang.data.types"))
             {
                 addConvertedToken("<string.h>\n", convertedTokenLocation);
                 convertedTokenLocation += 1;
             }
         }
         else if (0 == strcmp(Tokens[i], "C"))
+        {
             if (0 == strcmp(Tokens[i + 1], "["))
                 for (int z = i + 2; z < sizeof(Tokens) / sizeof(Tokens[0]); z++)
                     if (0 != strcmp(Tokens[z + 1], "-") && 0 != strcmp(Tokens[z + 2], "End"))
                     {
                         addConvertedToken(Tokens[z], convertedTokenLocation);
                         convertedTokenLocation += 1;
+                        if (0 == strcmp(Tokens[z + 1], " "))
+                        {
+                            addConvertedToken(Tokens[z + 1], convertedTokenLocation);
+                            convertedTokenLocation += 1;
+                            z++;
+                        }
                     }
                     else
                         break;
+        }
+        else if (0 == strcmp(Tokens[i], "int"))
+        {
+            addConvertedToken(Tokens[i], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(" ", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(Tokens[i + 1], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            if (0 == strcmp(Tokens[i + 2], "="))
+            {
+                addConvertedToken(Tokens[i + 2], convertedTokenLocation);
+                convertedTokenLocation += 1;
+                addConvertedToken(Tokens[i + 3], convertedTokenLocation);
+                convertedTokenLocation += 1;
+                Ints[IntsDeclared] = atoi(Tokens[i + 3]);
+                IntsDeclared += 1;
+            }
+            addConvertedToken(";", convertedTokenLocation);
+            convertedTokenLocation += 1;
+        }
+        else if (0 == strcmp(Tokens[i], "print.int"))
+        {
+            addConvertedToken("printf(\"%%d\\n\",", convertedTokenLocation);
+            convertedTokenLocation += 1;
+
+            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(");", convertedTokenLocation);
+            convertedTokenLocation += 1;
+        }
     }
 
     FILE *fptr = fopen("Main.cpp", "w");
