@@ -229,6 +229,34 @@ void Compile(char BinaryPath[])
             addConvertedToken(");", convertedTokenLocation);
             convertedTokenLocation += 1;
         }
+        else if (0 == strcmp(Tokens[i], "string"))
+        {
+            addConvertedToken("char ", convertedTokenLocation);
+            convertedTokenLocation += 1;
+
+            addConvertedToken(Tokens[i + 1], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken("[]", convertedTokenLocation);
+            convertedTokenLocation += 1;
+
+            for (int z = i + 2; z < i + 7; z++)
+            {
+                addConvertedToken(Tokens[z], convertedTokenLocation);
+                convertedTokenLocation += 1;
+            }
+
+            addConvertedToken(";", convertedTokenLocation);
+            convertedTokenLocation += 1;
+        }
+        else if (0 == strcmp(Tokens[i], "print.string"))
+        {
+            addConvertedToken("printf(\"%%s\\n\",", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(");", convertedTokenLocation);
+            convertedTokenLocation += 1;
+        }
     }
 
     FILE *fptr = fopen("Main.cpp", "w");
