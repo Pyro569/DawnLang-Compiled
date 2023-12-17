@@ -257,8 +257,40 @@ void Compile(char BinaryPath[])
             addConvertedToken(");", convertedTokenLocation);
             convertedTokenLocation += 1;
         }
+        else if (0 == strcmp(Tokens[i], "realloc"))
+        {
+            addConvertedToken("strncpy(", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken("\"", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(Tokens[i + 4], convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken("\"", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken(",", convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken("sizeof(", convertedTokenLocation);
+            convertedTokenLocation += 1;
+
+            int length = strlen(Tokens[i + 2]);
+            char modified[length];
+            strncpy(modified, Tokens[i + 2], length - 1);
+            modified[length - 1] = '\0';
+
+            addConvertedToken(modified, convertedTokenLocation);
+            convertedTokenLocation += 1;
+            addConvertedToken("));", convertedTokenLocation);
+            convertedTokenLocation += 1;
+        }
     }
 
+    Finishing(BinaryPath);
+}
+
+void Finishing(char BinaryPath[])
+{
     FILE *fptr = fopen("Main.cpp", "w");
     for (int i = 0; i < sizeof(convertedTokens) / sizeof(convertedTokens[0]); i++)
         fprintf(fptr, convertedTokens[i]);
