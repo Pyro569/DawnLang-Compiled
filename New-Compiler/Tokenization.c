@@ -224,11 +224,20 @@ void Compile(char BinaryPath[])
             addConvertedToken("strncpy(", &convertedTokenLocation);
             addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
             addConvertedToken("\"", &convertedTokenLocation);
-            addConvertedToken(Tokens[i + 4], &convertedTokenLocation);
-            addConvertedToken("\"", &convertedTokenLocation);
-            addConvertedToken(",", &convertedTokenLocation);
-            addConvertedToken("sizeof(", &convertedTokenLocation);
 
+            for (int j = i + 4; j < numTokens; j++)
+                if (0 != strcmp(Tokens[j], "\""))
+                {
+                    addConvertedToken(Tokens[j], &convertedTokenLocation);
+                    if (0 != strcmp(Tokens[j], "\""))
+                        addConvertedToken(" ", &convertedTokenLocation);
+                }
+                else
+                    break;
+
+            addConvertedToken("\",sizeof(", &convertedTokenLocation);
+
+            // remove the comma from the end of Tokens[i+2] because I am too lazy to fix the lexer to add commas as a seperate token
             int length = strlen(Tokens[i + 2]);
             char modified[length];
             strncpy(modified, Tokens[i + 2], length - 1);
