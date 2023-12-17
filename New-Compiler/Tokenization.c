@@ -13,8 +13,10 @@ char currentToken[MAX_LENGTH] = {};
 char Tokens[MAX_LINES][MAX_LENGTH] = {};
 char convertedTokens[MAX_LINES][MAX_LENGTH] = {};
 
+char IntNames[500][255] = {};
 char Ints[500] = {};
 int IntsDeclared = 0;
+
 char Strings[500][255] = {};
 int StringsDeclared = 0;
 
@@ -193,6 +195,7 @@ void Compile(char BinaryPath[])
                 addConvertedToken(Tokens[i + 3], &convertedTokenLocation);
 
                 Ints[IntsDeclared] = atoi(Tokens[i + 3]);
+                strncpy(IntNames[IntsDeclared], Tokens[i + 2], sizeof(Tokens[i + 2]));
                 IntsDeclared += 1;
             }
             addConvertedToken(";", &convertedTokenLocation);
@@ -229,6 +232,8 @@ void Compile(char BinaryPath[])
             addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
             addConvertedToken("\"", &convertedTokenLocation);
 
+            int stopPoint = 0;
+
             for (int j = i + 4; j < numTokens; j++)
                 if (0 != strcmp(Tokens[j], "\""))
                 {
@@ -237,7 +242,10 @@ void Compile(char BinaryPath[])
                         addConvertedToken(" ", &convertedTokenLocation);
                 }
                 else
+                {
+                    stopPoint = j;
                     break;
+                }
 
             addConvertedToken("\",sizeof(", &convertedTokenLocation);
 
@@ -249,6 +257,48 @@ void Compile(char BinaryPath[])
 
             addConvertedToken(modified, &convertedTokenLocation);
             addConvertedToken("));", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < stopPoint; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
+        }
+        else if (0 == strcmp(Tokens[i], "function"))
+        {
+            int stopSpot = 0;
+
+            addConvertedToken("void ", &convertedTokenLocation);
+            for (int j = i + 1; j < numTokens - 1; j++)
+                if (0 != strcmp(Tokens[j], "{"))
+                {
+                    if (0 == strcmp(Tokens[j], "string"))
+                    {
+                        addConvertedToken("char ", &convertedTokenLocation);
+                        addConvertedToken(Tokens[j + 1], &convertedTokenLocation);
+                        addConvertedToken("[]", &convertedTokenLocation);
+                        j++;
+                    }
+                    else
+                        addConvertedToken(Tokens[j], &convertedTokenLocation);
+
+                    if (0 == strcmp(Tokens[j], "int"))
+                    {
+                        Ints[IntsDeclared] = atoi(Tokens[j + 1]);
+                        strncpy(IntNames[IntsDeclared], Tokens[i + 2], sizeof(Tokens[i + 2]));
+                        IntsDeclared += 1;
+                    }
+
+                    if (0 != strcmp(Tokens[j + 1], "{"))
+                        addConvertedToken(" ", &convertedTokenLocation);
+                }
+                else
+                {
+                    stopSpot = j;
+                    break;
+                }
+
+            char Empty[] = "";
+            for (int j = i; j < stopSpot; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
     }
 
