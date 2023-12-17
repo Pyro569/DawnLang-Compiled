@@ -207,10 +207,14 @@ void Compile(char BinaryPath[])
         {
             addConvertedToken("char ", &convertedTokenLocation);
             addConvertedToken(Tokens[i + 1], &convertedTokenLocation);
-            addConvertedToken("[]", &convertedTokenLocation);
+            addConvertedToken("[] = \"", &convertedTokenLocation);
 
-            for (int z = i + 2; z < i + 7; z++)
+            for (int z = i + 4; z < i + 7; z++)
+            {
                 addConvertedToken(Tokens[z], &convertedTokenLocation);
+                if (0 != strcmp(Tokens[z + 1], "\""))
+                    addConvertedToken(" ", &convertedTokenLocation);
+            }
             addConvertedToken(";", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "print.string"))
@@ -229,7 +233,7 @@ void Compile(char BinaryPath[])
                 if (0 != strcmp(Tokens[j], "\""))
                 {
                     addConvertedToken(Tokens[j], &convertedTokenLocation);
-                    if (0 != strcmp(Tokens[j], "\""))
+                    if (0 != strcmp(Tokens[j + 1], "\""))
                         addConvertedToken(" ", &convertedTokenLocation);
                 }
                 else
