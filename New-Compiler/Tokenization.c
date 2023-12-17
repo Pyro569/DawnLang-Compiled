@@ -103,9 +103,10 @@ void ReadFile(char FilePath[], char BinaryPath[])
     }
 }
 
-void addConvertedToken(char Token[], int location)
+void addConvertedToken(char Token[], int *location)
 {
-    strcpy(convertedTokens[location], Token);
+    strcpy(convertedTokens[*location], Token);
+    (*location) += 1;
 }
 
 void Compile(char BinaryPath[])
@@ -121,65 +122,48 @@ void Compile(char BinaryPath[])
     {
         if (0 == strcmp(Tokens[i], "function") && 0 == strcmp(Tokens[i + 1], "main") && 0 == strcmp(Tokens[i + 2], "("))
         {
-            addConvertedToken("int main(", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("int main(", &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 4], "args)"))
-                addConvertedToken("int argc, char** argv)", convertedTokenLocation);
+                addConvertedToken("int argc, char** argv)", &convertedTokenLocation);
             else
-                addConvertedToken(")", convertedTokenLocation);
-            convertedTokenLocation += 1;
+                addConvertedToken(")", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "{"))
         {
-            addConvertedToken("{", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("{", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "}"))
         {
-            addConvertedToken("}", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("}", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "print"))
         {
-            addConvertedToken("printf(\"", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("printf(\"", &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 2], "\""))
             {
                 for (int z = i + 3; z < sizeof(Tokens) / sizeof(Tokens[0]); z++)
                     if (0 == strcmp(Tokens[z], "\""))
                     {
-                        addConvertedToken("\"", convertedTokenLocation);
-                        convertedTokenLocation += 1;
+                        addConvertedToken("\"", &convertedTokenLocation);
                         break;
                     }
                     else
                     {
-                        addConvertedToken(Tokens[z], convertedTokenLocation);
-                        convertedTokenLocation += 1;
+                        addConvertedToken(Tokens[z], &convertedTokenLocation);
+
                         if (0 != strcmp(Tokens[z + 1], "\""))
-                        {
-                            addConvertedToken(" ", convertedTokenLocation);
-                            convertedTokenLocation += 1;
-                        }
+                            addConvertedToken(" ", &convertedTokenLocation);
                     }
-                addConvertedToken(");", convertedTokenLocation);
-                convertedTokenLocation += 1;
+                addConvertedToken(");", &convertedTokenLocation);
             }
         }
         else if (0 == strcmp(Tokens[i], "#include"))
         {
-            addConvertedToken("#include", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("#include", &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 1], "dawnlang.io"))
-            {
-                addConvertedToken("<stdio.h>\n", convertedTokenLocation);
-                convertedTokenLocation += 1;
-            }
+                addConvertedToken("<stdio.h>\n", &convertedTokenLocation);
             else if (0 == strcmp(Tokens[i + 1], "dawnlang.data.types"))
-            {
-                addConvertedToken("<string.h>\n", convertedTokenLocation);
-                convertedTokenLocation += 1;
-            }
+                addConvertedToken("<string.h>\n", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "C"))
         {
@@ -187,12 +171,11 @@ void Compile(char BinaryPath[])
                 for (int z = i + 2; z < sizeof(Tokens) / sizeof(Tokens[0]); z++)
                     if (0 != strcmp(Tokens[z + 1], "-") && 0 != strcmp(Tokens[z + 2], "End"))
                     {
-                        addConvertedToken(Tokens[z], convertedTokenLocation);
-                        convertedTokenLocation += 1;
+                        addConvertedToken(Tokens[z], &convertedTokenLocation);
+
                         if (0 == strcmp(Tokens[z + 1], " "))
                         {
-                            addConvertedToken(Tokens[z + 1], convertedTokenLocation);
-                            convertedTokenLocation += 1;
+                            addConvertedToken(Tokens[z + 1], &convertedTokenLocation);
                             z++;
                         }
                     }
@@ -201,88 +184,58 @@ void Compile(char BinaryPath[])
         }
         else if (0 == strcmp(Tokens[i], "int"))
         {
-            addConvertedToken(Tokens[i], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(" ", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(Tokens[i + 1], convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken(Tokens[i], &convertedTokenLocation);
+            addConvertedToken(" ", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 1], &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 2], "="))
             {
-                addConvertedToken(Tokens[i + 2], convertedTokenLocation);
-                convertedTokenLocation += 1;
-                addConvertedToken(Tokens[i + 3], convertedTokenLocation);
-                convertedTokenLocation += 1;
+                addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+                addConvertedToken(Tokens[i + 3], &convertedTokenLocation);
+
                 Ints[IntsDeclared] = atoi(Tokens[i + 3]);
                 IntsDeclared += 1;
             }
-            addConvertedToken(";", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken(";", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "print.int"))
         {
-            addConvertedToken("printf(\"%%d\\n\",", convertedTokenLocation);
-            convertedTokenLocation += 1;
-
-            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(");", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("printf(\"%%d\\n\",", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken(");", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "string"))
         {
-            addConvertedToken("char ", convertedTokenLocation);
-            convertedTokenLocation += 1;
-
-            addConvertedToken(Tokens[i + 1], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken("[]", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("char ", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 1], &convertedTokenLocation);
+            addConvertedToken("[]", &convertedTokenLocation);
 
             for (int z = i + 2; z < i + 7; z++)
-            {
-                addConvertedToken(Tokens[z], convertedTokenLocation);
-                convertedTokenLocation += 1;
-            }
-
-            addConvertedToken(";", convertedTokenLocation);
-            convertedTokenLocation += 1;
+                addConvertedToken(Tokens[z], &convertedTokenLocation);
+            addConvertedToken(";", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "print.string"))
         {
-            addConvertedToken("printf(\"%%s\\n\",", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(");", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("printf(\"%%s\\n\",", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken(");", &convertedTokenLocation);
         }
         else if (0 == strcmp(Tokens[i], "realloc"))
         {
-            addConvertedToken("strncpy(", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(Tokens[i + 2], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken("\"", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(Tokens[i + 4], convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken("\"", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken(",", convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken("sizeof(", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken("strncpy(", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken("\"", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 4], &convertedTokenLocation);
+            addConvertedToken("\"", &convertedTokenLocation);
+            addConvertedToken(",", &convertedTokenLocation);
+            addConvertedToken("sizeof(", &convertedTokenLocation);
 
             int length = strlen(Tokens[i + 2]);
             char modified[length];
             strncpy(modified, Tokens[i + 2], length - 1);
             modified[length - 1] = '\0';
 
-            addConvertedToken(modified, convertedTokenLocation);
-            convertedTokenLocation += 1;
-            addConvertedToken("));", convertedTokenLocation);
-            convertedTokenLocation += 1;
+            addConvertedToken(modified, &convertedTokenLocation);
+            addConvertedToken("));", &convertedTokenLocation);
         }
     }
 
