@@ -329,9 +329,8 @@ void Compile(char BinaryPath[])
         //         }
         //     }
     }
-}
 
-Finishing(BinaryPath);
+    Finishing(BinaryPath);
 }
 
 void Finishing(char BinaryPath[])
