@@ -175,11 +175,13 @@ void Compile(char BinaryPath[])
                     {
                         addConvertedToken(Tokens[z], &convertedTokenLocation);
 
-                        if (0 == strcmp(Tokens[z + 1], " "))
-                        {
-                            addConvertedToken(Tokens[z + 1], &convertedTokenLocation);
-                            z++;
-                        }
+                        // if (0 != strcmp(Tokens[z + 2], "-") && 0 != strcmp(Tokens[z + 3], "End"))
+                        //{
+                        //     addConvertedToken(" ", &convertedTokenLocation);
+                        //  z++;
+                        //}
+                        // else
+                        //    break;
                     }
                     else
                         break;
@@ -307,6 +309,14 @@ void Compile(char BinaryPath[])
             char Empty[] = "";
             for (int j = i; j < stopSpot; j++)
                 strncpy(Tokens[j], Empty, sizeof(Empty));
+        }
+        else if (0 == strcmp(Tokens[i], "free"))
+        {
+            addConvertedToken("memset(", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken(", 0, sizeof(", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken("));", &convertedTokenLocation);
         }
         else
         {
