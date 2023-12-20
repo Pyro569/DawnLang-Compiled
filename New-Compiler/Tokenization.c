@@ -318,16 +318,32 @@ void Compile(char BinaryPath[])
             addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
             addConvertedToken("));", &convertedTokenLocation);
         }
-        // else
-        //{
-        //     for (int l = 0; l < sizeof(IntNames) / sizeof(IntNames[0]); l++)
-        //     {
-        //         if (0 == strcmp(Tokens[i], IntNames[l]))
-        //         {
-        //             addConvertedToken(Tokens[i], &convertedTokenLocation);
-        //             break;
-        //         }
-        //     }
+        else if (0 == strcmp(Tokens[i], "if"))
+        {
+            int stopPoint = 0;
+
+            for (int j = i; j < numTokens; j++)
+            {
+                if (0 != strcmp(Tokens[j], ")"))
+                {
+                    addConvertedToken(Tokens[j], &convertedTokenLocation);
+                }
+                else
+                {
+                    addConvertedToken(Tokens[j], &convertedTokenLocation);
+                    stopPoint = j;
+                    break;
+                }
+            }
+
+            char Empty[] = "";
+            for (int j = i; j < stopPoint; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
+        }
+        else if (0 == strcmp(Tokens[i], "else"))
+        {
+            addConvertedToken(Tokens[i], &convertedTokenLocation);
+        }
     }
 
     Finishing(BinaryPath);
