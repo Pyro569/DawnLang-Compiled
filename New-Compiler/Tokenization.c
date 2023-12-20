@@ -197,8 +197,10 @@ void Compile(char BinaryPath[])
                 addConvertedToken(Tokens[i + 3], &convertedTokenLocation);
 
                 Ints[IntsDeclared] = atoi(Tokens[i + 3]);
-                strncpy(IntNames[IntsDeclared], Tokens[i + 2], sizeof(Tokens[i + 2]));
+                strncpy(IntNames[IntsDeclared], Tokens[i + 1], sizeof(Tokens[i + 1]));
                 IntsDeclared += 1;
+
+                printf("%s\n", IntNames[IntsDeclared]);
             }
             addConvertedToken(";", &convertedTokenLocation);
 
@@ -211,6 +213,10 @@ void Compile(char BinaryPath[])
             addConvertedToken("printf(\"%%d\\n\",", &convertedTokenLocation);
             addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
             addConvertedToken(");", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 3; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "string"))
         {
@@ -235,6 +241,10 @@ void Compile(char BinaryPath[])
             addConvertedToken("printf(\"%%s\\n\",", &convertedTokenLocation);
             addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
             addConvertedToken(");", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 3; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "realloc"))
         {
@@ -343,6 +353,39 @@ void Compile(char BinaryPath[])
         else if (0 == strcmp(Tokens[i], "else"))
         {
             addConvertedToken(Tokens[i], &convertedTokenLocation);
+        }
+        else if (0 == strcmp(Tokens[i], "switch"))
+        {
+            addConvertedToken(Tokens[i], &convertedTokenLocation);
+            addConvertedToken("(", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+            addConvertedToken(")", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 3; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
+        }
+        else if (0 == strcmp(Tokens[i], "case"))
+        {
+            addConvertedToken(Tokens[i], &convertedTokenLocation);
+            addConvertedToken(" ", &convertedTokenLocation);
+            addConvertedToken(Tokens[i + 1], &convertedTokenLocation);
+        }
+        else if (0 == strcmp(Tokens[i], "break"))
+        {
+            addConvertedToken(Tokens[i], &convertedTokenLocation);
+            addConvertedToken(";", &convertedTokenLocation);
+        }
+        else
+        {
+            for (int l = 0; l < sizeof(IntNames) / sizeof(IntNames[0]); l++)
+            {
+                if (0 == strcmp(Tokens[i], IntNames[l]))
+                {
+                    addConvertedToken(IntNames[l], &convertedTokenLocation);
+                    break;
+                }
+            }
         }
     }
 
