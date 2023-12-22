@@ -20,6 +20,9 @@ int IntsDeclared = 0;
 char Strings[500][255] = {};
 int StringsDeclared = 0;
 
+char FunctionNames[500][255] = {};
+int FunctionsDeclared = 0;
+
 int tokenSpot = 0;
 
 void TokenizeFile(char BinaryPath[])
@@ -122,24 +125,38 @@ void Compile(char BinaryPath[])
 
     for (int i = 0; i < numTokens - 1; i++)
     {
-        if (0 == strcmp(Tokens[i], "function") && 0 == strcmp(Tokens[i + 1], "main") && 0 == strcmp(Tokens[i + 2], "("))
+        if (0 == strcmp(Tokens[i], "function") && 0 == strcmp(Tokens[i + 1], "main"))
         {
             addConvertedToken("int main(", &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 4], "args)"))
                 addConvertedToken("int argc, char** argv)", &convertedTokenLocation);
             else
                 addConvertedToken(")", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 4; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "{"))
         {
             addConvertedToken("{", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 1; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "}"))
         {
             addConvertedToken("}", &convertedTokenLocation);
+
+            char Empty[] = "";
+            for (int j = i; j < i + 1; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "print"))
         {
+            int spotPoint = 0;
+
             addConvertedToken("printf(\"", &convertedTokenLocation);
             if (0 == strcmp(Tokens[i + 2], "\""))
             {
@@ -147,6 +164,7 @@ void Compile(char BinaryPath[])
                     if (0 == strcmp(Tokens[z], "\""))
                     {
                         addConvertedToken("\"", &convertedTokenLocation);
+                        spotPoint = z;
                         break;
                     }
                     else
@@ -158,6 +176,10 @@ void Compile(char BinaryPath[])
                     }
                 addConvertedToken(");", &convertedTokenLocation);
             }
+
+            char Empty[] = "";
+            for (int j = i; j < spotPoint; j++)
+                strncpy(Tokens[j], Empty, sizeof(Empty));
         }
         else if (0 == strcmp(Tokens[i], "#include"))
         {
@@ -199,8 +221,6 @@ void Compile(char BinaryPath[])
                 Ints[IntsDeclared] = atoi(Tokens[i + 3]);
                 strncpy(IntNames[IntsDeclared], Tokens[i + 1], sizeof(Tokens[i + 1]));
                 IntsDeclared += 1;
-
-                printf("%s\n", IntNames[IntsDeclared]);
             }
             addConvertedToken(";", &convertedTokenLocation);
 
@@ -282,7 +302,7 @@ void Compile(char BinaryPath[])
             for (int j = i; j < stopPoint; j++)
                 strncpy(Tokens[j], Empty, sizeof(Empty));
         }
-        else if (0 == strcmp(Tokens[i], "function"))
+        else if (0 == strcmp(Tokens[i], "function") && 0 != strcmp(Tokens[i + 1], "main"))
         {
             int stopSpot = 0;
 
@@ -303,7 +323,7 @@ void Compile(char BinaryPath[])
                     if (0 == strcmp(Tokens[j], "int"))
                     {
                         Ints[IntsDeclared] = atoi(Tokens[j + 1]);
-                        strncpy(IntNames[IntsDeclared], Tokens[i + 2], sizeof(Tokens[i + 2]));
+                        strncpy(IntNames[IntsDeclared], Tokens[j + 1], sizeof(Tokens[j + 1]));
                         IntsDeclared += 1;
                     }
 
@@ -313,6 +333,8 @@ void Compile(char BinaryPath[])
                 else
                 {
                     stopSpot = j;
+                    strncpy(FunctionNames[FunctionsDeclared], Tokens[i + 1], sizeof(Tokens[i + 1]));
+                    FunctionsDeclared += 1;
                     break;
                 }
 
@@ -378,17 +400,49 @@ void Compile(char BinaryPath[])
         }
         else
         {
-            for (int l = 0; l < sizeof(IntNames) / sizeof(IntNames[0]); l++)
+            for (int l = 0; l < IntsDeclared; l++)
             {
                 if (0 == strcmp(Tokens[i], IntNames[l]))
                 {
                     addConvertedToken(IntNames[l], &convertedTokenLocation);
+
+                    if (0 == strcmp(Tokens[i + 1], "="))
+                    {
+                        addConvertedToken(Tokens[i + 1], &convertedTokenLocation);
+                        addConvertedToken(Tokens[i + 2], &convertedTokenLocation);
+                        addConvertedToken(";", &convertedTokenLocation);
+                    }
+
                     break;
                 }
             }
+
+            for (int l = 0; l < FunctionsDeclared; l++)
+            {
+                if (0 == strcmp(Tokens[i], FunctionNames[l]))
+                {
+                    addConvertedToken(FunctionNames[l], &convertedTokenLocation);
+
+                    int stopSpot = 0;
+
+                    for (int z = i + 1; z < numTokens; z++)
+                        if (0 == strcmp(Tokens[z], ")"))
+                        {
+                            addConvertedToken(");", &convertedTokenLocation);
+                            stopSpot = z;
+                            break;
+                        }
+                        else
+                            addConvertedToken(Tokens[z], &convertedTokenLocation);
+
+                    char Empty[] = "";
+                    for (int j = i; j < stopSpot; j++)
+                        strncpy(Tokens[j], Empty, sizeof(Empty));
+                }
+                break;
+            }
         }
     }
-
     Finishing(BinaryPath);
 }
 
