@@ -1,3 +1,5 @@
+After careful consideration I have decided that I am unhappy with the evolution of DawnLang and its backend so I have made the executive decision to discontinue DawnLang and restart with a new code-base and new language style. For the successor, Pine, check out https://github.com/Pyro569/Pine  
+  
 DawnLang is a high-level compiled programming language with the speed of C and the relative simplicity of python as well as the ability to directly write C code in DawnLang and interface with variables and functions that were written in the C Code!
 
 To get started with DawnLang clone this repository and compile it. Next, make a file ending in the extension .dl, this will be our DawnLang file. To get started writing DawnLang, you can check out the example files folder in this repository or use the example below:  
